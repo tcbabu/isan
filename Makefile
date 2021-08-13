@@ -24,11 +24,9 @@ GMFILES += $(foreach part, OpenSource, $(wildcard $(addprefix $(part)/,*.bz2)))
 GMFILES += $(foreach part, OpenSource, $(wildcard $(addprefix $(part)/,*.xz)))
 
 KGLIBFILES = $(foreach part, kglib, $(wildcard $(addprefix $(part)/,*.[ch])))
-LINAFILES = $(foreach part, lina, $(wildcard $(addprefix $(part)/,*.[ch])))
-CONFIGFILES = $(foreach part, Config, $(wildcard $(addprefix $(part)/,*.[ch])))
-SETPHOTOFILES = $(foreach part, SetPhoto, $(wildcard $(addprefix $(part)/,*.[ch])))
+KBFILES = $(foreach part, keybrd, $(wildcard $(addprefix $(part)/,*.[ch])))
 
-all	: lina/lina SetPhoto/SetPhoto Config/configlina
+all	: keybrd/Keybrd
 
 lib/libkulina.a	: lib/libgm.a $(KGLIBFILES) 
 	echo "PREFIX=$(PWD)">kglib/config.mak
@@ -45,26 +43,14 @@ lib/libgm.a	: $(GMFILES)
 	echo "export PKG_CONFIG_PATH=$(PWD)/lib/pkgconfig:/usr/X11R76/lib/pkgconfig">>OpenSource/config.mak
 	$(MAKE) -C OpenSource 
 	$(MAKE) -C OpenSource install
-lina/lina	: lib/libgm.a lib/libkulina.a $(LINAFILES)
-	echo "PREFIX=$(PREFIX)">lina/config.mak
-	echo "KULINA=$(PWD)">>lina/config.mak
-	$(MAKE) -C lina
-SetPhoto/SetPhoto	: lib/libgm.a lib/libkulina.a $(SETPHOTOFILES)
-	echo "PREFIX=$(PREFIX)">SetPhoto/config.mak
-	echo "KULINA=$(PWD)">>SetPhoto/config.mak
-	$(MAKE) -C SetPhoto
-Config/configlina	: lib/libgm.a lib/libkulina.a $(CONFIGFILES)
-	echo "PREFIX=$(PREFIX)">Config/config.mak
-	echo "KULINA=$(PWD)">>Config/config.mak
-	$(MAKE) -C Config
-install	: lina/lina SetPhoto/SetPhoto Config/configlina
-	  $(MAKE) -C lina install
-	  $(MAKE) -C Config install
-	  $(MAKE) -C SetPhoto install
+keybrd/Keybrd	: lib/libgm.a lib/libkulina.a $(KBFILES)
+	echo "PREFIX=$(PREFIX)">keybrd/config.mak
+	echo "KULINA=$(PWD)">>keybrd/config.mak
+	$(MAKE) -C keybrd
+install	: keybrd/Keybrd
+	  $(MAKE) -C keybrd install
 clean	:
 	 rm -rf lib/* share/* bin/* man/*
 	$(MAKE) -C OpenSource clean
 	$(MAKE) -C kglib clean
-	$(MAKE) -C lina clean
-	$(MAKE) -C Config clean
-	$(MAKE) -C SetPhoto  clean
+	$(MAKE) -C keybrd clean
