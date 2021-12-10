@@ -49,6 +49,10 @@ keybrd/Keybrd	: lib/libgm.a lib/libkulina.a $(KBFILES)
 	$(MAKE) -C keybrd
 install	: keybrd/Keybrd
 	  $(MAKE) -C keybrd install
+	  mkdir -p /usr/share/isan
+	  install  -m 755 isan.desktop  /usr/share/applications/
+	  install -m 755 keyboard.png /usr/share/isan/
+
 clean	:
 	 rm -rf lib/* share/* bin/* man/*
 	$(MAKE) -C OpenSource clean
