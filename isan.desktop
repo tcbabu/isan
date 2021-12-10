@@ -1,0 +1,10 @@
+[Desktop Entry]
+Version=1.0
+Name=Desktop Keyboard
+Comment= Screen Keyboard
+Exec=Keyboard
+Icon=/usr/share/isan/keyboard.png
+Terminal=false
+Type=Application
+Categories=Settings;System;
+StartupNotify=true

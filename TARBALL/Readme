@@ -1,0 +1,17 @@
+Deaktop Keyborad for X Windows
+Developed by Kulina Systems, Trivandrum Kerala India
+
+
+One can clone the code from github and bui;id it, ie;
+
+git clone git@github.com:tcbabu/isan.git
+cd isan
+make
+sudo make install
+
+Hopefully, the code includes everything and normally
+there should not be any problem.
+
+One also download the binary tarball/package install once
+it is provided in 'SourceForge'.
+
