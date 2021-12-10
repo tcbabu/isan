@@ -34,13 +34,13 @@ make  install >out
 cd ..
 rm -r -f zlib-1.2.8
 echo "zlib"
-tar xf gzip-1.6.tar.xz >out
-cd gzip-1.6
+tar xf gzip-1.10.tar.xz >out
+cd gzip-1.10
 ./configure --prefix=$KULINA  >out
 make  >out
 make  install  >out
 cd ..
-rm -rf gzip-1.6 >out
+rm -rf gzip-1.10 >out
 echo "gzip"
 tar xf libpng-1.6.9.tar.xz
 cd libpng-1.6.9
