@@ -1,2 +1,2 @@
 PREFIX=/usr
-KULINA=/home/babu/BUILD/isan
+KULINA=/home/babu/KULINA/isan

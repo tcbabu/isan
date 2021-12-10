@@ -2,7 +2,7 @@
 Version=1.0
 Name=Desktop Keyboard
 Comment= Screen Keyboard
-Exec=Keyboard
+Exec=Keybrd
 Icon=/usr/share/isan/keyboard.png
 Terminal=false
 Type=Application
