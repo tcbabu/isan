@@ -11008,6 +11008,8 @@ int _uiMake_Y(DIY *y)
    bwsr->scroll=1;
    if(y->size==y->ny) {
          bwsr->scroll=0;
+	 //TCB
+         bwsr->pos=0;
    }
    bwsr->size=y->size;
    if(bwsr->df >n ) bwsr->df=1;

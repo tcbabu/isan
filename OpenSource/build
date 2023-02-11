@@ -3,6 +3,8 @@ KULINA=/home/babu/BUILD/isan
 export X11_CFLAGS="-I/home/babu/BUILD/isan/include "
 export X11_LIBS="-lX11"
 export PKG_CONFIG_PATH=/home/babu/BUILD/isan/lib/pkgconfig:/usr/X11R76/lib/pkgconfig
+#this need to be in the begining
+#./mkzlib
 #export PKG_CONFIG_PATH=$KULINA/lib/pkgconfig
 export LD_CONFIG_PATH=$LD_CONFIG_PATH:$KULINA/lib
 export LDFLAGS=-L$KULINA/lib
@@ -31,21 +33,22 @@ make -j4 install PREFIX=$KULINA >out
 cd ..
 rm -rf bzip2-1.0.6
 echo "bzip2"
-tar xf zlib-1.2.8.tar.gz
-cd zlib-1.2.8
-./configure --prefix=$KULINA --static  >out
+tar xf zlib-1.2.13.tar.xz
+cd zlib-1.2.13
+ ./configure --prefix=$KULINA --static  --64 >out
 make -j4  >out
 make -j4 install >out
 cd ..
-rm -r -f zlib-1.2.8
+rm -r -f zlib-1.2.13
 echo "zlib"
-tar xf gzip-1.6.tar.xz >out
-cd gzip-1.6
+echo "Making Gzip"
+tar xf gzip-1.12.tar.xz >out
+cd gzip-1.12
 ./configure --prefix=$KULINA  >out
-make -j4 >out
-make -j4 install  >out
+make  >out
+make  install  >out
 cd ..
-rm -rf gzip-1.6 >out
+rm -rf gzip-1.12 >out
 echo "gzip"
 tar xf libpng-1.6.9.tar.xz
 cd libpng-1.6.9

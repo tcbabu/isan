@@ -1,0 +1,9 @@
+include config.mak
+tar xf zlib-1.2.13.tar.xz
+cd zlib-1.2.13
+./configure --prefix=$KULINA --64 --static
+make
+make install
+cd ..
+rm -rf zlib-1.2.13
+
