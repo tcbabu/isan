@@ -7,7 +7,7 @@ Keybrd	: Keybrd.o kbcheckCallbacks.o Keybrdmain.o  \
 	 $(CC) -o Keybrd Keybrd.o kbcheckCallbacks.o Keybrdmain.o \
 	  kbconfig.o kbconfigCallbacks.o \
 	  kbsetup.o kbsetupCallbacks.o \
-	  -I$(KULINA)/include $(KULINA)/lib/libkulina.a $(KULINA)/lib/libgm.a -L/usr/X11R6/lib -lX11 -lXext -lm -lpthread -lz -lbz2 -lGL
+	  -I$(KULINA)/include $(KULINA)/lib/libkulina.a $(KULINA)/lib/libgm.a -L/usr/X11R6/lib -lX11 -lXext -lm -lpthread 
 Keybrd.o	: Keybrd.c 
 	 $(CC) -c Keybrd.c
 kbcheckCallbacks.o	: kbcheckCallbacks.c 
