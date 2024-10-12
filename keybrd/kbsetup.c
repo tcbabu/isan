@@ -115,21 +115,21 @@ int kbsetupGroup( DIALOG *D,void **v,void *pt) {
   butn4[0].xpmp=NULL;
   butn4[0].xpmh=NULL;
   butn4[0].bkgr=-235255250;
-  butn4[0].butncode='';
+  butn4[0].butncode=127;
   butn4[1].sw=1;
   strcpy(butn4[1].title,(char *)"Key Color");
   butn4[1].xpmn=NULL;
   butn4[1].xpmp=NULL;
   butn4[1].xpmh=NULL;
   butn4[1].bkgr=-98098098;
-  butn4[1].butncode='';
+  butn4[1].butncode=127;
   butn4[2].sw=1;
   strcpy(butn4[2].title,(char *)"Text Color");
   butn4[2].xpmn=NULL;
   butn4[2].xpmp=NULL;
   butn4[2].xpmh=NULL;
   butn4[2].bkgr=-216216216;
-  butn4[2].butncode='';
+  butn4[2].butncode=127;
   DIN b4 = { 
     'n',
     10,128,  
@@ -154,14 +154,14 @@ int kbsetupGroup( DIALOG *D,void **v,void *pt) {
   butn5[0].xpmp=NULL;
   butn5[0].xpmh=NULL;
   butn5[0].bkgr=-235255250;
-  butn5[0].butncode='';
+  butn5[0].butncode=127;
   DIN b5 = { 
     'n',
-    329,189,  
-    539,219,
+    289,189,  
+    549,224,
     2,2,  
-    200, 
-    20, 
+    240, 
+    25, 
     1,1, 
     9,0.150000,1,0,0,1, /* button type and roundinfg factor(0-0.5),bordr,hide ,nodrawbkgr*/
  
@@ -179,7 +179,7 @@ int kbsetupGroup( DIALOG *D,void **v,void *pt) {
   butn6[0].xpmp=NULL;
   butn6[0].xpmh=NULL;
   butn6[0].bkgr=-235255250;
-  butn6[0].butncode='';
+  butn6[0].butncode=127;
   DIL h6 = { 
     'h',
     240,405,  

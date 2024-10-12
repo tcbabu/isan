@@ -20,14 +20,14 @@ int kbconfigGroup( DIALOG *D,void **v,void *pt) {
   butn0[0].xpmp=NULL;
   butn0[0].xpmh=NULL;
   butn0[0].bkgr=-1;
-  butn0[0].butncode='';
+  butn0[0].butncode = 127;
   butn0[1].sw=1;
   strcpy(butn0[1].title,(char *)"");
   butn0[1].xpmn=NULL;
   butn0[1].xpmp=NULL;
   butn0[1].xpmh=NULL;
   butn0[1].bkgr=-1;
-  butn0[1].butncode='';
+  butn0[1].butncode = 127;
   butn0[2].sw=1;
   strcpy(butn0[2].title,(char *)"");
   butn0[2].xpmn=NULL;
@@ -49,7 +49,7 @@ int kbconfigGroup( DIALOG *D,void **v,void *pt) {
   butn0[2].xpmh= NULL;
 #endif
   butn0[2].bkgr=-1;
-  butn0[2].butncode='';
+  butn0[2].butncode = 127;
   DIL h0 = { 
     'h',
     4,6,  
@@ -58,7 +58,7 @@ int kbconfigGroup( DIALOG *D,void **v,void *pt) {
     16, 
     16, 
     3,1, 
-    4,0.500000,0,0,0,1, /* button type and roundinfg factor(0-0.5),bordr,hide ,nodrawbkgr*/
+    0,0.500000,0,0,0,1, /* button type and roundinfg factor(0-0.5),bordr,hide ,nodrawbkgr*/
  
     butn0, 
     kbconfigsplbutton1callback, /*  Callbak */

@@ -150,9 +150,16 @@ int  kbsetupbutton2callback(int butno,int i,void *Tmp) {
   D = (DIALOG *)Tmp;
   KBINFO *ki;
   ki = (KBINFO *)(D->pt);
+  font = ki->font;
   B = (DIN *)kgGetWidget(Tmp,i);
   n = B->nx*B->ny;
+#if 0
   font = kgGetFont(NULL,100,200);
+#else
+  kgGetFreeTypeFont(NULL,&font);
+  kgFreeDouble((void **)Fonts);
+  Fonts = kgGetFontList();
+#endif
   kgChangeButtonTitle(B,0,Fonts[font]);
   ki->font = font;
   kgUpdateWidget(B);
@@ -166,7 +173,8 @@ void  kbsetupbutton2init(DIN *B,void *pt) {
    int font;
    BUT_STR *buts;
    KBINFO *ki;
-   if(Fonts==NULL) Fonts= kgFontNames();
+//   if(Fonts==NULL) Fonts= kgFontNames();
+   if (Fonts == NULL) Fonts= kgGetFontList();
    ki = (KBINFO *)pt;
    buts = (BUT_STR *)B->buts;
    strcpy(buts[0].title,Fonts[ki->font]);

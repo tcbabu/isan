@@ -49,6 +49,7 @@ keybrd/Keybrd	: lib/libgm.a lib/libkulina.a $(KBFILES)
 	$(MAKE) -C keybrd
 install	: keybrd/Keybrd
 	  $(MAKE) -C keybrd install
+	  tar xzf fonts.tar -C /usr/share/fonts
 clean	:
 	 rm -rf lib/* share/* bin/* man/*
 	$(MAKE) -C OpenSource clean

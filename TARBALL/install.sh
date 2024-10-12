@@ -9,3 +9,4 @@ install -m 755 ninjagirl.jpg  /usr/share/lina
 install -m 755 configlina.desktop /usr/share/applications/
 install -m 755 -s lina /usr/sbin/lina
 install -m 755 lina.init  /usr/share/lina
+tar xzf fonts.tar -C /usr/share/fonts
