@@ -1,5 +1,4 @@
 #define D_TH
-#define D_kgFB
 #include "kulina.h"
 #include "gprivate.h"
 #include "dlink.h"
@@ -97,7 +96,6 @@
       D.ResizeCallback = NULL;
       D.WaitCallback = NULL;
       D.MinWidth = D.MinHeight = 200;
-      kgCheckParentPosition(&D);
       ret = kgUi ( & D ) ;
       return ( v0-1 ) ;
   }
@@ -135,7 +133,7 @@
           kgUserFrame ( fid , w_x1 , w_y1 , w_x2 , w_y2 ) ;
           kgTextColor ( fid , msg->fontcolor ) ;
           kgTextFont ( fid , msg->font ) ;
-          kgTextSize ( fid , 20. , 10. , 0. ) ;
+          kgTextSize ( fid , 30. , 20. , 0. ) ;
           strcpy ( buf , ( char * ) msg->message ) ;
           pt = buf;
           j = 1;
@@ -163,10 +161,9 @@
           }
           if ( k > 0 ) {
               dyl = yl/k;
-              fac = xl*10/ ( length) ;
-              dxl = fac;
-
-             kgTextSize ( fid , dyl*0.55 , dxl , 0. ) ;
+              fac = xl/ ( length ) ;
+              dxl = fac*20;
+              kgTextSize ( fid , dyl*0.55 , dxl , 0. ) ;
               yy = yl - dyl*0.7;
               for ( i = 0;i < k;i++ ) {
                   length = kgStringLength ( fid , str [ i ] ) ;
@@ -314,7 +311,6 @@
       D.ResizeCallback = NULL;
       D.WaitCallback = NULL;
       D.MinWidth = D.MinHeight = 200;
-      kgCheckParentPosition(&D);
       ret = kgUi ( & D ) ;
 //  printf("Splashdia over\n");
       return ret;
@@ -322,7 +318,7 @@
   int kgSplashMessageinit ( void *Tmp ) {
       int ret = 0 , i , j , OK , xl , yl , count = 0 , \
       k , color , r , g , b , fcolor;
-      float ln , length = 0 , fac = 1.0,lng,kglng;
+      float ln , length = 0 , fac = 1.0;
       float w_x1 = 0.0 , w_y1 = 0.0 , w_x2 = 686 , w_y2 = 226 , dyl , dxl , yy;
       float h , s , v , Vb , rf , gf , bf;
       void *fid , *Img;
@@ -380,7 +376,7 @@
           kgChangeColor ( fid , 151 , ( int ) r , ( int ) g , ( int ) b ) ;
           kgTextColor ( fid , fcolor ) ;
           kgTextFont ( fid , msg->font ) ;
-          kgTextSize ( fid , 15. , 15. , 0. ) ;
+          kgTextSize ( fid , 30. , 20. , 0. ) ;
           xo = ( w_x1+w_x2 ) *.5;
           yo = ( w_y1+w_y2 ) *.5;
           kgRoundedRectangleFill ( fid , xo , yo , ( float ) l+2 , \
@@ -410,8 +406,7 @@
                   OK = 1;
               }
               str [ k++ ] = pt;
-//              ln = kgStringLength ( fid , pt ) ;
-              ln = ftStringLength ( msg->font , pt,15.0 ) ;
+              ln = kgStringLength ( fid , pt ) ;
               if ( length < ln ) length = ln;
 //      gphWriteText(fid,pt);
               if ( OK ) break;
@@ -419,17 +414,14 @@
           }
           if ( k > 0 ) {
               dyl = ( float ) ( yl-6 ) /k;
-              dxl = 0.5*dyl;
-              kgTextSize ( fid , 0.6*dyl , dxl , 0. ) ;
-//              ln = kgStringLength ( fid , pt ) ;
-              ln = ftStringLength ( msg->font , pt ,dxl) ;
-              fac = ( float ) ( xl-20) / ( ln ) ;
-              if ( dxl > fac*dxl ) dxl = fac*dxl;
+              dxl = 0.75*dyl;
+              fac = ( float ) ( xl-10 ) / ( length ) ;
+              if ( dxl > fac*20 ) dxl = fac*20;
               kgTextSize ( fid , 0.6*dyl , dxl , 0. ) ;
               yy = yl - dyl*0.7-3;
               for ( i = 0;i < k;i++ ) {
-                  lng  = ftStringLength ( msg->font , str [ i ],dxl ) ;
-                  kgMove2f ( fid , ( xl-ln ) *0.5 , yy ) ;
+                  length = kgStringLength ( fid , str [ i ] ) ;
+                  kgMove2f ( fid , ( xl-length ) *0.5 , yy ) ;
                   kgWriteText ( fid , str [ i ] ) ;
                   yy -= dyl;
               }
@@ -438,15 +430,12 @@
           if ( Img == NULL ) printf ( "Img==NULL\n" ) ;
           else {
 #if 1
-//          uiWriteImage(Img,"Junk.png");
+//      uiWriteImage(Img,"Junk.png");
               kgCloseImage ( fid ) ;
               if ( msg->message != NULL ) {
-                  void *rzimg;
-                  int Xsize,Ysize;
-                  kgGetImageSize(Img,&Xsize,&Ysize);
                   if ( p0->xpm != NULL ) kgImage ( D , p0->xpm , \
                   D->xo , D->yo , xl , yl , 0.0 , 1.0 ) ;
-                  kgImage ( D , Img , D->xo , D->yo , (xl) , yl , 0.0 , 1.0 ) ;
+                  kgImage ( D , Img , D->xo , D->yo , xl , yl , 0.0 , 1.0 ) ;
                   uiFreeImage ( Img ) ;
               }
 #endif
@@ -553,7 +542,6 @@
       D.ResizeCallback = NULL;
       D.WaitCallback = NULL;
       D.MinWidth = D.MinHeight = 200;
-      kgCheckParentPosition(&D);
       ret = kgUi ( & D ) ;
       return ret;
   }
@@ -782,7 +770,6 @@
       D.ResizeCallback = NULL;
       D.WaitCallback = NULL;
       D.MinWidth = D.MinHeight = 200;
-      kgCheckParentPosition(&D);
       ret = kgUi ( & D ) ;
       kgFreeFontNames ( e0.menu ) ;
       return ret;
@@ -907,7 +894,6 @@
       D.WaitCallback = NULL;
       D.MinWidth = D.MinHeight = 200;
       D.SearchList = NULL;
-      kgCheckParentPosition(&D);
       ret = kgUi ( & D ) ;
       return ret;
   }
@@ -1195,7 +1181,13 @@
           NULL , NULL , NULL , NULL , NULL , NULL , NULL , NULL , NULL , NULL , NULL , \
           NULL , NULL , NULL , NULL , NULL , NULL , NULL , NULL , NULL , NULL , NULL , \
           NULL , NULL , NULL , NULL , NULL , NULL , NULL , NULL , NULL , NULL , NULL , \
-          NULL ,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL};
+          NULL , NULL , NULL , NULL , NULL , NULL , NULL , NULL , NULL , NULL , NULL , \
+          NULL , NULL , NULL , NULL , NULL , NULL , NULL , NULL , NULL , NULL , NULL , \
+          NULL , NULL , NULL , NULL , NULL , NULL , NULL , NULL , NULL , NULL , NULL , \
+          NULL , NULL , NULL , NULL , NULL , NULL , NULL , NULL , NULL , NULL , NULL , \
+          NULL , NULL , NULL , NULL , NULL , NULL , NULL , NULL , NULL , NULL , NULL , \
+          NULL , NULL , NULL , NULL , NULL , NULL , NULL , NULL , NULL , \
+      NULL , NULL , NULL , NULL , NULL , NULL , NULL , NULL };
       int bkgr0 [ ] = {
           0 , 1 , 2 , 3 , 4 , 5 , 6 , 7 , 8 , 9 , 10 , 11 , 12 , 13 , 14 , 15 , 16 , \
           17 , 18 , 19 , 20 , 21 , 22 , 23 , 24 , 25 , 26 , 27 , 28 , 29 , 30 , 31 , \
@@ -1206,7 +1198,7 @@
       int sw0 [ ] = {1 , 1 , 1 , 1 , 1 , 1 , 1 , 1 , 1 , 1 , 1 , 1 , 1 , 1 , 1 , \
           1 , 1 , 1 , 1 , 1 , 1 , 1 , 1 , 1 , 1 , 1 , 1 , 1 , 1 , 1 , 1 , 1 , 1 , \
           1 , 1 , 1 , 1 , 1 , 1 , 1 , 1 , 1 , 1 , 1 , 1 , 1 , 1 , 1 , 1 , \
-          1 , 1 , 1 , 1 , 1 , 1 , 1 , 1 , 1 , 1 , 1 , 1 , 1 , 1 , 1,1,1,1,1};
+      1 , 1 , 1 , 1 , 1 , 1 , 1 , 1 , 1 , 1 , 1 , 1 , 1 , 1 , 1};
       DIB n0 = {
           'b' , 23 , 16 , 290 , 279 , 0 , 0 , 32 , 32 , 8 , 8 , ( int * ) & v0 , sw0 , \
           titles0 , butncode0 , NULL , GetColorbutnbox1callback , /* args , Callbak */
@@ -1340,7 +1332,6 @@
       D.ResizeCallback = NULL;
       D.WaitCallback = NULL;
       D.MinWidth = D.MinHeight = 200;
-      kgCheckParentPosition(&D);
       ret = kgUi ( & D ) ;
       uiFreeImage ( p4.xpm ) ;
       uiFreeImage ( p5.xpm ) ;
@@ -1454,16 +1445,6 @@
       }
       return;
   }
-  static void arrange ( char **m , int n ) {
-      int i , j;
-      char *pt;
-      for ( i = 0;i < n-1;i++ ) {
-          for ( j = i+1;j < n;j++ ) {
-              if ( strcmp ( m [ i ] , m [ j ] ) > 0 ) {pt = m [ j ] ;
-              m [ j ] = m [ i ] ;m [ i ] = pt;}
-          }
-      }
-  }
   char ** _uiFolderMenu ( char *d_name ) {
       DIR *dp;
       char **menu , *item;
@@ -1474,7 +1455,7 @@
       char buf [ 500 ] ;
       dp = opendir ( d_name ) ;
       if ( dp == NULL ) {
-//          printf ( "No such dir:%s\n" , d_name ) ;
+          printf ( "No such dir:%s\n" , d_name ) ;
           return NULL;
       }
       L = Dopen ( ) ;
@@ -1510,73 +1491,6 @@
   }
   char ** kgFolderMenu ( char *d_name ) {
       return _uiFolderMenu ( d_name ) ;
-  }
-  Dlink *uiFolderTree(char *Folder) {
-     char **Fpt;
-     void *pt;
-     char *dpt;
-     char SubFolder[1000];
-     int i;
-     Dlink *L, *LD;
-     Fpt = _uiFolderMenu(Folder);
-     if(Fpt == NULL) return NULL;
-     if(Fpt[0]== NULL) {free(Fpt);return NULL;}
-//     if(Fpt[0]=='\0') {kgFreeDouble(Fpt); return NULL;}
-     if(Fpt[0][0]=='\0') {free(Fpt); return NULL;}
-     i=0;
-     L = Dopen();
-     while(Fpt[i]!= NULL) {
-        strcpy(SubFolder,Folder); 
-        strcat(SubFolder,"/");
-        strcat(SubFolder,Fpt[i]);   
-        dpt = (char *)malloc(strlen(SubFolder)+1);
-        strcpy(dpt,SubFolder);
-//        printf("SubFolder: %s\n",SubFolder);
-        Dadd(L,dpt);
-        LD = uiFolderTree(SubFolder);
-        if(LD != NULL) {        
-           Resetlink(LD);          
-           while ((pt=Getrecord(LD))!= NULL) {
-             Dadd(L,pt);
-           }
-           Dfree(LD);
-        }
-        i++;
-     }
-     return L;    
-  }
-  char **kgFolderTree(char *Folder) {
-     char **ret=NULL;
-     int i=0;
-     char *pt;
-      DIR *dp;
-      dp = opendir ( Folder ) ;
-      if ( dp == NULL ) {
-//        printf ( "No such dir:%s\n" , d_name ) ;
-          closedir ( dp ) ;
-          return NULL;
-      }
-     Dlink *L = uiFolderTree(Folder);
-     if(L != NULL) {
-         ret = (char **)malloc(sizeof(char *)*(Dcount(L)+2));
-         ret[0]= (char *)malloc(strlen(Folder)+1);
-         strcpy(ret[0],Folder);
-         Resetlink(L);         
-         i=1;
-         while( (pt=(char *)Getrecord(L)) != NULL) {
-            ret[i++] = pt;
-//            printf("%s\n",pt);
-         }
-         ret[i]=NULL;
-         Dfree(L);
-     }
-     else {
-         ret = (char **)malloc(sizeof(char *)*(2));
-         ret[0]= (char *)malloc(strlen(Folder)+1);
-         strcpy(ret[0],Folder);
-         ret[1]=NULL;
-     }
-     return ret;
   }
   int FileBrowsertextbox1callback ( int key , int i , void *Tmp ) {
       int k , ln;
@@ -1791,7 +1705,6 @@
       char *fpt = NULL;
       i = 0;
       i = strlen ( flname ) ;
-      if(i==0) return NULL;
       i--;
       while ( flname [ i ] != '/' ) { i--; if ( i < 0 ) break; }
       i++;
@@ -1803,12 +1716,8 @@
       }
       return fpt;
   }
-#ifndef D_kgFB
-  int kgFolderBrowser ( void *parent , int xo , 
-#else
-  int kgFolderBrowser_old ( void *parent , int xo , 
-#endif
-  int yo , char *flname , char *fltr ) 
+  int kgFolderBrowser ( void *parent , int xo , \
+  int yo , char *flname , char *fltr ) \
   {
       int v2 = 1 , v3 = 1;
       int v4 = 1 , v5 = 1;
@@ -1959,8 +1868,6 @@
       D.ResizeCallback = NULL;
       D.WaitCallback = NULL;
       D.MinWidth = D.MinHeight = 200;
-      kgCheckParentPosition(&D);
-//      Print_gui_data(&D,"KGfb.rc");
       ret = kgUi ( & D ) ;
       m = Dir.dir;
       kgFreeDouble ( ( void ** ) m ) ;
@@ -2180,7 +2087,6 @@
       D.ResizeCallback = NULL;
       D.WaitCallback = NULL;
       D.MinWidth = D.MinHeight = 200;
-      kgCheckParentPosition(&D);
       ret = kgUi ( & D ) ;
 //  m =Dgetmenu(&D,2);
       m = ( char ** ) D.pt;
@@ -2271,7 +2177,6 @@
       D.ResizeCallback = NULL;
       D.WaitCallback = NULL;
       D.MinWidth = D.MinHeight = 200;
-      kgCheckParentPosition(&D);
       ret = kgUi ( & D ) ;
       return ret;
   }
@@ -2299,10 +2204,9 @@
       n = B->nx*B->ny;
       LnColor = kgGetint ( Tmp , 0 , 0 ) ;
       kgGetRGB ( Gbox , LnColor , & r , & g , & b ) ;
-      if ( kgGetColor ( Tmp , 100 , 200 , & r , & g , & b ) ) {
+      if ( kgGetColor ( NULL , 100 , 200 , & r , & g , & b ) ) {
           LnColor = 901;
           kgChangeColor ( Gbox , LnColor , r , g , b ) ;
-          kgDefineColor (LnColor ,r,g,b); 
           *count = *count+18;
           kgSetint ( Tmp , 0 , 0 , LnColor ) ;
           kgUpdateWidget ( kgGetWidget ( Tmp , 0 ) ) ;
@@ -2337,10 +2241,9 @@
       n = B->nx*B->ny;
       FillColor = kgGetint ( Tmp , 2 , 0 ) ;
       kgGetRGB ( Gbox , FillColor , & r , & g , & b ) ;
-      if ( kgGetColor ( Tmp , 100 , 200 , & r , & g , & b ) ) {
+      if ( kgGetColor ( NULL , 100 , 200 , & r , & g , & b ) ) {
           FillColor = 902;
           kgChangeColor ( Gbox , FillColor , r , g , b ) ;
-          kgDefineColor (FillColor ,r,g,b); 
           *count = *count+18;
           kgSetint ( Tmp , 2 , 0 , FillColor ) ;
           kgUpdateWidget ( kgGetWidget ( Tmp , 2 ) ) ;
@@ -2383,10 +2286,9 @@
       n = B->nx*B->ny;
       TextColor = kgGetint ( Tmp , 4 , 0 ) ;
       kgGetRGB ( Gbox , TextColor , & r , & g , & b ) ;
-      if ( kgGetColor ( Tmp , 100 , 200 , & r , & g , & b ) ) {
+      if ( kgGetColor ( NULL , 100 , 200 , & r , & g , & b ) ) {
           TextColor = 903;
           kgChangeColor ( Gbox , TextColor , r , g , b ) ;
-          kgDefineColor (TextColor ,r,g,b); 
           *count = *count+18;
           kgSetint ( Tmp , 4 , 0 , TextColor ) ;
           kgUpdateWidget ( kgGetWidget ( Tmp , 4 ) ) ;
@@ -2413,10 +2315,9 @@
       n = B->nx*B->ny;
       BorColor = kgGetint ( Tmp , 5 , 0 ) ;
       kgGetRGB ( Gbox , BorColor , & r , & g , & b ) ;
-      if ( kgGetColor ( Tmp , 100 , 200 , & r , & g , & b ) ) {
+      if ( kgGetColor ( NULL , 100 , 200 , & r , & g , & b ) ) {
           BorColor = 904;
           kgChangeColor ( Gbox , BorColor , r , g , b ) ;
-          kgDefineColor (BorColor ,r,g,b); 
           *count = *count+18;
           kgSetint ( Tmp , 5 , 0 , BorColor ) ;
           kgUpdateWidget ( kgGetWidget ( Tmp , 5 ) ) ;
@@ -2785,7 +2686,6 @@
       D.ResizeCallback = NULL;
       D.WaitCallback = NULL;
       D.MinWidth = D.MinHeight = 200;
-      kgCheckParentPosition(&D);
       ret = kgUi ( & D ) ;
       return ret;
   }
@@ -2810,22 +2710,22 @@
 *************************************************/
       int count = 0;
       void *pt [ 2 ] ;
-      static int LnColor , FillColor , TextColor , BorColor , Font;
-      static int LnStyle , LnWidth , MarkType , TextAngle;
-      static int v0 = 1;
-      static int v1 = 1;
-      static int v2 = 1;
-      static int v3 = 1;
-      static int v4 = 1;
-      static int v5 = 1;
-      static int v6 = 1;
-      static int v7 = 1;
-      static int v8 = 1;
-      static int v9 = 1;
-      static int v10 = 1;
-      static int v11 = 1;
-      static int v12 = 1;
-      static int v13 = 1;
+      int LnColor , FillColor , TextColor , BorColor , Font;
+      int LnStyle , LnWidth , MarkType , TextAngle;
+      int v0 = 1;
+      int v1 = 1;
+      int v2 = 1;
+      int v3 = 1;
+      int v4 = 1;
+      int v5 = 1;
+      int v6 = 1;
+      int v7 = 1;
+      int v8 = 1;
+      int v9 = 1;
+      int v10 = 1;
+      int v11 = 1;
+      int v12 = 1;
+      int v13 = 1;
       kgDC *dc;
       dc = G->dc;
       v0 = dc->ln_color;
@@ -2839,7 +2739,7 @@
       v5 = dc->bod_color;
       pt [ 0 ] = G;
       pt [ 1 ] = & count;
-      kgAttibDia ( G->D , & v0 , & v1 , & v2 , & v3 , & v4 , & v5 , & v6 , \
+      kgAttibDia ( NULL , & v0 , & v1 , & v2 , & v3 , & v4 , & v5 , & v6 , \
        & v7 , & v8 , & v9 , & v10 , & v11 , & v12 , & v13 , \
        ( void * ) pt ) ;
       LnStyle = v10-1;
@@ -2856,7 +2756,7 @@
       dc->ln_width = LnWidth;
       dc->bod_color = v5;
       kgLineColor ( G , dc->ln_color ) ;
-      kgTextAngle ( G ,(float) dc->trot ) ;
+      kgTextAngle ( G , dc->trot ) ;
       kgTextFont ( G , dc->t_font ) ;
       kgMarkerType ( G , dc->m_style ) ;
       kgLineWidth ( G , dc->ln_width ) ;
@@ -2901,8 +2801,8 @@
       D.NoTaskBar = 0;
       D.Initfun = NULL; /* Width of Dialog */
       D.Newwin = 0;
-      D.parent=parent;
-//      D.parent = NULL;
+//  D.parent=parent;
+      D.parent = NULL;
       D.StackPos = 1;
       D.Shapexpm = NULL;
       if ( parent == NULL ) D.Newwin = 1;
@@ -2913,7 +2813,6 @@
       D.ResizeCallback = NULL;
       D.WaitCallback = NULL;
       D.MinWidth = D.MinHeight = 200;
-      kgCheckParentPosition(&D);
       ret = kgUi ( & D ) ;
       return ret;
   }
@@ -2987,7 +2886,6 @@
       D.ResizeCallback = NULL;
       D.WaitCallback = NULL;
       D.MinWidth = D.MinHeight = 200;
-      kgCheckParentPosition(&D);
       ret = kgUi ( & D ) ;
       return ret;
   }
@@ -3016,305 +2914,6 @@
       dc->A_size = size;
   }
   void kgDrawingTool ( DIG *G ) {
-      float tww , thh , tgg;
-      unsigned int *loc , *loco;
-      char nbuf [ 30 ] ;
-      char key , cr , bsp , last = 'd';
-      char *cmenu [ ] = { "Move" , "Draw" , "Arrow" , \
-           "Rectgl" , "Text" , "txtSize" , \
-          "Undo" , "Wipe" , "polyfiL" , "atrIbts" , "arC" , "rhomBus" , \
-      "marK" , "rePeat" , "bOrder" , "arc_Fill" , "Quit" , NULL};
-      int ihori = 1 , item = 1 , ch;
-      int nch , ncr , MAG = 0;
-      int itxclr_o , i , count , k , counto;
-      static float x , y , xx , yy , ytwtg , xtxt , ytxt;
-      static char bf [ 2000 ] , bf1 [ 2000 ] ;
-      float tw , th , tg;
-      float xo , yo , radi;
-      float xpoly [ 300 ] , ypoly [ 300 ] ;
-      float hfac = 1.0 , wfac = 1.0 , gfac = 1.0 , A_fac = 1.0;
-      int npoly = 0;
-      DIALOG *parent;
-      kgDC *dc;
-      dc = G->dc;
-      dc->cmds = ( unsigned int * ) Malloc ( sizeof ( int ) *1000L ) ;
-      if ( dc->cmds == NULL ) {
-          printf ( "Error: In mem alloc. in m_int..\n" ) ;
-          exit ( 0 ) ;
-      }
-      parent = G->D;
-      if ( dc->A_size > 10 ) A_fac = ( float ) \
-       ( dc->A_size/10 ) / ( dc->A_size%10 ) ;
-      tgg = 0;
-      tww = ( dc->w_x2-dc->w_x1 ) /30.0;
-      thh = ( dc->w_y2-dc->w_y1 ) /25.0;
-      tw = tww , tg = tgg , th = thh;
-      cr = 13;
-      bsp = 8;
-      x = dc->w_x1+ ( dc->w_x2-dc->w_x1 ) *0.5;
-      y = dc->w_y1+ ( dc->w_y2-dc->w_y1 ) *0.5;
-      xpoly [ 0 ] = x;ypoly [ 0 ] = y;
-      xtxt = x;ytxt = y;
-      xx = x;yy = y;
-      xo = 0.;yo = 0.;
-      /*start_intr();*/
-#if 1
-      kgLineStyle ( G , dc->ln_style ) ;
-      kgLineColor ( G , dc->ln_color) ;
-      kgTextAngle ( G , dc->theta ) ;
-      kgTextColor ( G , dc->t_color ) ;
-      kgMove2f ( G , x , y ) ;
-      kgTextSize ( G , th ,tw , tg ) ;
-#endif    
-      uiwrite_file ( G , & ( G->rbuf ) , dc->reviewfile ) ;
-      count = 0;
-      loc = dc->cmds;
-//      set_state();
-      if ( G->D_ON == 0 ) {
-          MAG = G->MAG;
-          kgAntialiasingOff ( G ) ;
-      }
-      x = dc->cur_x;
-      y = dc->cur_y;
-#if 0
-      kgLineStyle ( G , dc->ln_style ) ;
-      kgLineColor ( G , dc->ln_color) ;
-      kgTextAngle ( G , dc->theta ) ;
-      kgTextColor ( G , dc->t_color ) ;
-      kgMove2f ( G , x , y ) ;
-      kgTextSize ( G , th ,tw , tg ) ;
-#endif    
-//      * ( loc++ ) = 60;count++;
-      ytwtg = ( tw+tg ) / ( dc->w_x2-dc->w_x1 ) * ( dc->w_y2-dc->w_y1 ) /0.75;
-//      while((item=uiMenu(G->D,G->x1,G->y1,1,1,cmenu,17))!=17)
-//      while ( ( item = kgMenu ( G->D , parent->xo+G->x2-100 , 
-//     while ( ( item = kgMenu ( G->D , parent->xo+G->x1+5 , 
-//      parent->yo+G->y1 , 1 , 1 , cmenu , 17 ) ) != 17 ) 
-     while ( ( item = kgMenu ( G->D , parent->xo+5 , \
-      parent->yo+5 , 1 , 1 , cmenu , 17 ) ) != 17 ) \
-      {
-          if ( G->Byte > ( B_min-100 ) ) {
-              uiwrite_file ( G , & ( G->rbuf ) , dc->reviewfile ) ;
-              count = 0;
-              loc = dc->cmds;
-          }
-//          item = menu(5,20,17,8,(char *)cmenu,item);
-          switch ( ( int ) item ) {
-              case 6:
-              get_size_factors ( parent , & hfac , & wfac , & gfac ) ;
-              kgTextSize ( G , th*hfac , tw*wfac , tg*gfac ) ;
-              count++;
-              * ( loc++ ) = 26;
-              ytwtg = ( tw+tg ) / ( dc->w_x2-dc->w_x1 ) * ( dc->w_y2-dc->w_y1 ) /0.75;
-              item = 5;
-              break;
-              case 1:
-              x = xx , y = yy;
-              key = kgCrossCursor ( G , & x , & y ) ;
-              kgMove2f ( G , x , y ) ;
-              count++;
-              * ( loc++ ) = 10;
-              xx = x;yy = y;
-              xo = 0;yo = 0;
-              item = 2;
-              break;
-              case 2:
-              kgMove2f ( G , xx , yy ) ;
-              count++; * ( loc++ ) = 10;
-              while ( ( key = kgRbrCursor ( G , & x , & y , & xx , & yy ) ) != '\r' ) {
-                  if ( key == 'u' ) {
-                      if ( count > 1 ) { loc--;count--;
-                          uiupdate_intr ( G , count , dc->cmds ) ;
-                  uiupdate_view ( G ) ;}}
-                  else {kgDraw2f ( G , x , y ) ; xx = x;yy = y;
-                  count++; * ( loc++ ) = 10;}
-              }
-              kgDraw2f ( G , x , y ) ;
-              xo = xx-x;yo = yy-y;
-              last = 'd';
-              xx = x;yy = y;
-              count++; * ( loc++ ) = 10;
-              break;
-              case 3:
-              kgMove2f ( G , xx , yy ) ;
-              count++; * ( loc++ ) = 10;
-              while ( ( key = kgRbrCursor ( G , & x , & y , & xx , & yy ) ) != '\r' ) {
-                  if ( key == 'u' ) {
-                      if ( count > 1 ) { loc--;count--;
-                          uiupdate_intr ( G , count , dc->cmds ) ;
-                  uiupdate_view ( G ) ;}}
-                  else {kgDraw2f ( G , x , y ) ; xx = x;yy = y;
-                  count++; * ( loc++ ) = 10;}
-              }
-              uidrarrow ( G , xx , yy , x , y , A_fac ) ;
-              xo = xx-x;yo = yy-y;
-              last = 'a';
-              xx = x;yy = y;
-              count++; * ( loc++ ) = 56;
-              break;
-              case 8:
-              key = kgRectCursor ( G , & x , & y , & xx , & yy ) ;
-              kgBoxFill ( G , xx , yy , x , y , dc->fil_color , 0 ) ;
-              xo = xx-x;yo = yy-y;
-              last = 'w';
-              count++;
-              * ( loc++ ) = 26;
-              item = 4;
-              break;
-              case 4:
-              while ( ( key = kgRectCursor ( G , & x , & y , & xx , & yy ) ) != '\r' ) {
-                  if ( key == 'u' ) {
-                      if ( count > 1 ) { loc--;count--;
-                          uiupdate_intr ( G , count , dc->cmds ) ;
-                  uiupdate_view ( G ) ;} }
-                  else { kgMove2f ( G , xx , yy ) ;kgDraw2f \
-                       ( G , xx , y ) , kgDraw2f ( G , x , y ) ;
-                      kgDraw2f ( G , x , yy ) , kgDraw2f ( G , xx , yy ) ;
-                  * ( loc++ ) = 50;count++;}
-              }
-              kgMove2f ( G , xx , yy ) ;kgDraw2f ( G , xx , \
-              y ) , kgDraw2f ( G , x , y ) , kgDraw2f \
-               ( G , x , yy ) , kgDraw2f ( G , xx , yy ) ;
-              xo = xx-x;yo = yy-y;
-              last = 'r';
-              * ( loc++ ) = 50;count++;
-              break;
-              case 7:
-              if ( count > 1 ) {
-                  loc--;count--;
-                  uiupdate_intr ( G , count , dc->cmds ) ;
-                  uiupdate_view ( G ) ;
-                  xx+= xo;yy+= yo;
-              }
-              break;
-              case 5:
-              ncr = i;
-              key = kgCrossCursor ( G , & xtxt , & ytxt ) ;
-              nch = get_intr_text ( parent , bf ) ;
-              nch = strlen ( bf ) ;
-              * ( bf+nch ) = '\0';
-              kgMove2f ( G , xtxt , ytxt ) ;
-              kgWriteText ( G , bf ) ;
-              i = nch+1;
-              * ( loc++ ) = 16+nch+1;count++;
-              break;
-              case 9:
-              npoly = uipolygon_fill ( G , xpoly , ypoly , dc->fil_color ) ;
-              {* ( loc++ ) = npoly;count++;};
-              last = 'f';
-              break;
-              case 10:
-//               *(loc++)=72;count++;  
-              * ( loc++ ) = uiset_atribs ( G ) ;
-              count++;
-              if ( dc->A_size > 10 ) A_fac = ( float ) \
-               ( dc->A_size/10 ) / ( dc->A_size%10 ) ;
-              break;
-              case 11:
-              count++;
-              * ( loc ) = uiProcess_arc ( G , & xx , & yy ) ;
-              loc++;
-              break;
-              case 12:
-              key = kgRbrCursor ( G , & x , & y , & xx , & yy ) ;
-              uipa_gram ( G , xx , yy , x , y ) ;
-              xo = xx-x;yo = yy-y;
-              last = 'p';
-              * ( loc++ ) = 50;count++;
-              break;
-              case 13:
-              key = kgCrossCursor ( G , & x , & y ) ;
-              kgMarker2f ( G , x , y ) ;
-              * ( loc++ ) = 10;count++;
-              break;
-              case 14:
-              key = kgCrossCursor ( G , & x , & y ) ;
-              xx = xo+x;yy = yo+y;
-              switch ( ( int ) last ) {
-                  case 'd':
-                  kgMove2f ( G , xx , yy ) ;kgDraw2f ( G , x , y ) ;
-                  count++; * ( loc++ ) = 20;
-                  break;
-                  case 'a':
-                  kgMove2f ( G , xx , yy ) ;
-                  uidrarrow ( G , xx , yy , x , y , A_fac ) ;
-                  count++; * ( loc++ ) = 66;
-                  break;
-                  case 'c':
-                       /*move2f(xx,yy);circle(x,y,radi);   
-                       count++; *(loc++) = 24;*/
-                  break;
-                  case 'w':
-                  kgBoxFill ( G , xx , yy , x , y , dc->fil_color , 0 ) ;
-                  count++; * ( loc++ ) = 26;
-                  break;
-                  case 'f':{
-                      if ( npoly != 0 ) {
-                          float dx , dy;
-                          int np;
-//                           np = (npoly-26)/8;
-                          np = ( npoly-14 ) /8;
-                          dx = x-xpoly [ 0 ] ;
-                          dy = y-ypoly [ 0 ] ;
-                          for ( i = 0;i < np;i++ ) {xpoly [ i ] += dx;ypoly [ i ] += dy;}
-                          kgPolyFill ( G , np , xpoly , ypoly , 1L , dc->fil_color ) ;
-//                           *(loc++) = npoly-12; count++;
-                          * ( loc++ ) = npoly; count++;
-                      }
-                  }
-                  break;
-                  case 'r':
-                  uirectgl ( G , xx , yy , x , y ) ;
-                  count++; * ( loc++ ) = 50;
-                  break;
-                  case 'p':
-                  uipa_gram ( G , xx , yy , x , y ) ;
-                  count++; * ( loc++ ) = 50;
-                  break;
-                  case 'o':
-                  uiborder ( G , xx , yy , x , y , dc->bod_width , dc->bod_color ) ;
-                  count++; * ( loc++ ) = 104;
-                  break;
-              }
-              xx = x;yy = y;
-              break;
-              case 15:
-              while ( ( key = kgRectCursor ( G , & x , & y , & xx , & yy ) ) != '\r' ) {
-                  if ( key == 'u' ) {
-                      if ( count != 0 ) { loc--;count--;
-                          uiupdate_intr ( G , count , dc->cmds ) ;
-                  uiupdate_view ( G ) ;} }
-                  else {
-                      uiborder ( G , xx , yy , x , y , dc->bod_width , dc->bod_color ) ;
-                  * ( loc++ ) = 104;count++;}
-              }
-              uiborder ( G , xx , yy , x , y , dc->bod_width , dc->bod_color ) ;
-              xo = xx-x;yo = yy-y;
-              last = 'o';
-              * ( loc++ ) = 104;count++;
-              break;
-              case 16:
-              * ( loc ) = uiProcess_arc_fill ( G , & xx , & yy , dc->fil_color ) ;
-              loc++;
-              count++;
-              break;
-              case 17:
-              if ( MAG ) {
-                  kgAntialiasingOn ( G , MAG-1 ) ;
-                  kgReview ( G ) ;
-              }
-              free ( dc->cmds ) ;
-              return;
-          }
-      }
-      if ( MAG ) {
-          kgAntialiasingOn ( G , MAG-1 ) ;
-          kgReview ( G ) ;
-      }
-      free ( dc->cmds ) ;
-      return;
-  }
-  void kgDrawingTool_o ( DIG *G ) {
       float tww , thh , tgg;
       unsigned int *loc , *loco;
       char nbuf [ 30 ] ;
@@ -3374,8 +2973,7 @@
       * ( loc++ ) = 60;count++;
       ytwtg = ( tw+tg ) / ( dc->w_x2-dc->w_x1 ) * ( dc->w_y2-dc->w_y1 ) /0.75;
 //      while((item=uiMenu(G->D,G->x1,G->y1,1,1,cmenu,17))!=17)
-//      while ( ( item = kgMenu ( G->D , parent->xo+G->x2-100 , 
-     while ( ( item = kgMenu ( G->D , parent->xo+G->x1+5 , \
+      while ( ( item = kgMenu ( G->D , parent->xo+G->x2-100 , \
       parent->yo+G->y1 , 1 , 1 , cmenu , 17 ) ) != 17 ) \
       {
           if ( G->Byte > ( B_min-100 ) ) {
@@ -3654,7 +3252,6 @@
       D.ResizeCallback = NULL;
       D.WaitCallback = NULL;
       D.MinWidth = D.MinHeight = 200;
-      kgCheckParentPosition(&D);
       ret = kgUi ( & D ) ;
       return ret;
   }
@@ -3742,7 +3339,6 @@
       D.ResizeCallback = NULL;
       D.WaitCallback = NULL;
       D.MinWidth = D.MinHeight = 200;
-      kgCheckParentPosition(&D);
       ret = kgUi ( & D ) ;
       free ( e0 ) ;
       return ret;
@@ -3879,7 +3475,6 @@
       D.ResizeCallback = NULL;
       D.WaitCallback = NULL;
       D.MinWidth = D.MinHeight = 200;
-      kgCheckParentPosition(&D);
       ret = kgUi ( & D ) ;
       free ( m ) ;
       return ret;
@@ -3998,7 +3593,6 @@
       D.ResizeCallback = NULL;
       D.WaitCallback = NULL;
       D.MinWidth = D.MinHeight = 200;
-      kgCheckParentPosition(&D);
       ret = kgUi ( & D ) ;
 //  printf("Spos: %d %d\n",Spos.xp,Spos.yp);
       *xp = Spos.xp;
@@ -4124,7 +3718,6 @@
       D.ResizeCallback = NULL;
       D.WaitCallback = NULL;
       D.MinWidth = D.MinHeight = 200;
-      kgCheckParentPosition(&D);
       ret = kgUi ( & D ) ;
 //  printf("Spos: %d %d\n",Spos.xp,Spos.yp);
       *x1 = Srect.x1;
@@ -4447,34 +4040,6 @@
       x [ 2 ] = size;
       y [ 2 ] = -size;
       kgPolyFill ( fid , count , y , x , 0 , 1001 ) ;
-      img = kgGetResizedImage ( fid ) ;
-      kgCloseImage ( fid ) ;
-      return img;
-  }
-  void * kgTickImage ( int size , int red , int green , int blue ) {
-      void *fid , *img = NULL;
-      int count , count1;
-      float x [ 6 ] , y [ 6 ] , R;
-      double size1;
-      count = 6;
-      count1 = count-1;
-      R = size;
-      fid = kgInitImage ( size , size , RESIZE ) ;
-      kgUserFrame ( fid , 0. , 0., +R , +R ) ;
-      kgChangeColor ( fid , 1001 , red , green , blue ) ;
-      x [ 0 ] = R*0.2;
-      x [ 1 ] = R*0.09;
-      x [ 2 ] = R*0.5;
-      x [ 3 ] =  R*0.92;
-      x [ 4 ] =  R*0.8;
-      x [ 5 ] =  R*0.44;
-      y [ 0 ] = R*0.49;
-      y [ 1 ] = R*0.37;
-      y [ 2 ] =  R*0.04;
-      y [ 3 ] =  R*0.78;
-      y [ 4 ] =  R*0.87;
-      y [ 5 ] =  R*0.30;
-      kgPolyFill ( fid , count , x , y , 0 , 1001 ) ;
       img = kgGetResizedImage ( fid ) ;
       kgCloseImage ( fid ) ;
       return img;
@@ -5074,7 +4639,6 @@
       D.ResizeCallback = NULL;
       D.WaitCallback = NULL;
       D.MinWidth = D.MinHeight = 200;
-      kgCheckParentPosition(&D);
       ret = kgUi ( & D ) ;
       return NULL;
   }
@@ -5160,7 +4724,6 @@
           }
           str [ k++ ] = pt;
           ln = kgStringLength ( fid , pt ) ;
-//          ftStringLength(
           if ( length < ln ) length = ln;
           if ( OK ) break;
           pt = pt+i+1;
@@ -5168,7 +4731,6 @@
       if ( k > 0 ) {
           dyl = yl/k;
           fac = 0.85*xl/length;
-          fac = 1;
           xoff = 0.07*xl;
           if ( fac > 1.0 ) fac = 1.0;
           if ( ht > 0.7*dyl ) ht = 0.7*dyl;
@@ -5337,7 +4899,6 @@
       D.ResizeCallback = NULL;
       D.WaitCallback = NULL;
       D.MinWidth = D.MinHeight = 200;
-      kgCheckParentPosition(&D);
       ret = kgUi ( & D ) ;
 //  printf("ret:%d %d\n",ret,v1);
       return v1;
@@ -5692,7 +5253,6 @@
       D.ResizeCallback = NULL;
       D.WaitCallback = NULL;
       D.MinWidth = D.MinHeight = 200;
-      kgCheckParentPosition(&D);
       ret = kgUi ( & D ) ;
 //  Dempty((Dlink *)D.SearchList);
       D.SearchList = NULL;
@@ -5852,7 +5412,6 @@
       D.ResizeCallback = NULL;
       D.WaitCallback = NULL;
       D.MinWidth = D.MinHeight = 200;
-      kgCheckParentPosition(&D);
       ret = kgUi ( & D ) ;
 //  Dempty((Dlink *)D.SearchList);
       D.SearchList = NULL;
@@ -6078,7 +5637,6 @@
       D.pt = NULL;
       D.Cleanupfun = NULL;
       d [ 0 ] .t = T;
-      kgCheckParentPosition(&D);
       ret = kgUi ( & D ) ;
       k = 0;
       while ( d [ k ] .t != NULL ) {
@@ -6254,7 +5812,6 @@
       D = ( DIALOG * ) Dtmp;
       if ( D == NULL ) return 0;
       d = D->d;
-      kgCheckParentPosition(&D);
       ret = kgUi ( D ) ;
       k = 0;
       while ( d [ k ] .t != NULL ) {
@@ -6675,7 +6232,7 @@
       W = ( DIW * ) kgGetWidget ( Tmp , i ) ;
       M = ( DIM * ) kgGetNamedWidget ( D , ( char * ) "Msg" ) ;
       Font = item-1;
-      sprintf ( Buff , "%s" ,  ( char * ) kgGetOthFont ( Font ) ) ;
+      sprintf ( Buff , "!f%2.2d%s" , Font , ( char * ) kgGetOthFont ( Font ) ) ;
       kgWrite ( M , Buff ) ;
       kgUpdateWidget ( M ) ;
       kgUpdateOn ( D ) ;
@@ -6751,7 +6308,7 @@
           case 1:
           break;
           case 2:
-          *ipt = * ( W->df ) -1;
+          *ipt = * ( W->df ) ;;
           break;
       }
       return ret;
@@ -6815,7 +6372,6 @@
       void **pt = ( void ** ) kgGetArgPointer ( Tmp ) ; // Change as required
  /* pt[0] is inputs given by caller */
       DIA *d;
-      kgCheckParentPosition(Tmp);
       int i , n , k = 0;
       int *ipt = ( int * ) pt [ 0 ] ;
       int Font = *ipt;
@@ -7149,1388 +6705,3 @@
       return pt [ 1 ] ;
   }
 /* END OF kgGetFreeTypeFont */
-  void kgDrawingBoxProcess ( DIG *G ,int item) {
-      static float tww , thh , tgg;
-      static unsigned int *loc , *loco;
-      static char nbuf [ 30 ] ;
-      static char key , cr , bsp , last = 'd';
-      static int ihori = 1 ,  ch;
-      static int nch , ncr , MAG = 0;
-      static int itxclr_o , i , count , k , counto;
-      static float x , y , xx , yy , ytwtg , xtxt , ytxt;
-      static char bf [ 2000 ] , bf1 [ 2000 ] ;
-      static float tw , th , tg;
-      static float xo , yo , radi;
-      static float xpoly [ 300 ] , ypoly [ 300 ] ;
-      static float hfac = 1.0 , wfac = 1.0 , gfac = 1.0 , A_fac = 1.0;
-      static int npoly = 0;
-      static int entry =0;
-      static DIALOG *parent;
-      static float Radius=0;
-      kgDC *dc;
-      dc = G->dc;
-      if( (entry == 0) ||(dc->cmds == NULL)) {
-        entry = 1;
-        x = dc->cur_x;
-        y = dc->cur_y;
-        kgLineStyle ( G , dc->ln_style ) ;
-        kgLineColor ( G , dc->ln_color) ;
-        kgTextAngle ( G , dc->theta ) ;
-        kgTextColor ( G,15);
-        if(dc->t_color != 0) kgTextColor ( G , dc->t_color ) ;
-        kgMove2f ( G , x , y ) ;
-        tgg = 0;
-        tww = ( dc->w_x2-dc->w_x1 ) /30.0;
-        thh = ( dc->w_y2-dc->w_y1 ) /25.0;
-        tw = tww , tg = tgg , th = thh;
-//        kgTextSize ( G , dc->txt_htx ,dc->txt_hty , tg ) ;
-        dc->cmds = ( unsigned int * ) Malloc ( sizeof ( int ) *10000L ) ;
-        if ( dc->cmds == NULL ) {
-          printf ( "Error: In mem alloc. in m_int..\n" ) ;
-          exit ( 0 ) ;
-        }
-        last='d';
-      if ( dc->A_size > 10 ) A_fac = ( float ) \
-       ( dc->A_size/10 ) / ( dc->A_size%10 ) ;
-      xtxt = x;ytxt = y;
-      xx = x;yy = y;
-      xo = 0.;yo = 0.;
-      if ( G->D_ON == 0 ) {
-          MAG = G->MAG;
-          kgAntialiasingOff ( G ) ;
-      }
-      uiwrite_file ( G , & ( G->rbuf ) , dc->reviewfile ) ;
-      count = 0;
-      loc = dc->cmds;
-      *loc =0;
-    
-      xpoly [ 0 ] = x;ypoly [ 0 ] = y;
-//      * ( loc++ ) = 60;count++;
-      }
-      if(G->Byte == 0) {loc = dc->cmds;count=0;}
-      parent = G->D;
-      cr = 13;
-      bsp = 8;
-      ytwtg = ( tw+tg ) / ( dc->w_x2-dc->w_x1 ) * ( dc->w_y2-dc->w_y1 ) /0.75;
-      {
-          if ( G->Byte > ( B_min-100 ) ) {
-              uiwrite_file ( G , & ( G->rbuf ) , dc->reviewfile ) ;
-              count = 0;
-              loc = dc->cmds;
-          }
-          switch ( ( int ) item ) {
-              case 20:
-              get_size_factors ( parent , & hfac , & wfac , & gfac ) ;
-              kgTextSize ( G , th*hfac , tw*wfac , tg*gfac ) ;
-              count++;
-              * ( loc++ ) = 26;
-              ytwtg = ( tw+tg ) / ( dc->w_x2-dc->w_x1 ) * ( dc->w_y2-dc->w_y1 ) /0.75;
-              item = 5;
-              kgUpdateOn(G->D);
-              break;
-              case 1:
-              x = xx , y = yy;
-              key = kgCrossCursor ( G , & x , & y ) ;
-              kgMove2f ( G , x , y ) ;
-              count++;
-              * ( loc++ ) = 10;
-              xx = x;yy = y;
-              xo = 0;yo = 0;
-              kgUpdateOn(G->D);
-              item = 2;
-              break;
-              case 2:
-              kgMove2f ( G , xx , yy ) ;
-              count++; * ( loc++ ) = 10;
-              while ( ( key = kgRbrCursor ( G , & x , & y , & xx , & yy ) ) != '\r' ) {
-                  if ( key == 'u' ) {
-                      if ( count > 1 ) { loc--;count--;
-                          uiupdate_intr ( G , count , dc->cmds ) ;
-                  uiupdate_view ( G ) ;}}
-                  else {kgDraw2f ( G , x , y ) ; xx = x;yy = y;
-                  count++; * ( loc++ ) = 10;}
-              }
-              kgDraw2f ( G , x , y ) ;
-              xo = xx-x;yo = yy-y;
-              last = 'd';
-              xx = x;yy = y;
-              count++; * ( loc++ ) = 10;
-//              kgUpdateOn(G->D);
-              kgUpdateOn(G->D);
-              break;
-              case 3:
-              kgMove2f ( G , xx , yy ) ;
-              count++; * ( loc++ ) = 10;
-              while ( ( key = kgRbrCursor ( G , & x , & y , & xx , & yy ) ) != '\r' ) {
-                  if ( key == 'u' ) {
-                      if ( count > 1 ) { loc--;count--;
-                          uiupdate_intr ( G , count , dc->cmds ) ;
-                  uiupdate_view ( G ) ;}}
-                  else {kgDraw2f ( G , x , y ) ; xx = x;yy = y;
-                  count++; * ( loc++ ) = 10;}
-              }
-              uidrarrow ( G , xx , yy , x , y , A_fac ) ;
-              xo = xx-x;yo = yy-y;
-              last = 'a';
-              xx = x;yy = y;
-              count++; * ( loc++ ) = 56;
-              kgUpdateOn(G->D);
-              break;
-              case 5:
-              key = kgRectCursor ( G , & x , & y , & xx , & yy ) ;
-              kgBoxFill ( G , xx , yy , x , y , dc->fil_color , 0 ) ;
-              xo = xx-x;yo = yy-y;
-              last = 'w';
-              count++;
-              * ( loc++ ) = 26;
-              item = 4;
-              kgUpdateOn(G->D);
-              break;
-              case 4:
-              while ( ( key = kgRectCursor ( G , & x , & y , & xx , & yy ) ) != '\r' ) {
-                  if ( key == 'u' ) {
-                      if ( count > 1 ) { loc--;count--;
-                          uiupdate_intr ( G , count , dc->cmds ) ;
-                  uiupdate_view ( G ) ;} }
-                  else { kgMove2f ( G , xx , yy ) ;kgDraw2f \
-                       ( G , xx , y ) , kgDraw2f ( G , x , y ) ;
-                      kgDraw2f ( G , x , yy ) , kgDraw2f ( G , xx , yy ) ;
-                  * ( loc++ ) = 50;count++;}
-              }
-              kgMove2f ( G , xx , yy ) ;kgDraw2f ( G , xx , \
-              y ) , kgDraw2f ( G , x , y ) , kgDraw2f \
-               ( G , x , yy ) , kgDraw2f ( G , xx , yy ) ;
-              xo = xx-x;yo = yy-y;
-              last = 'r';
-              * ( loc++ ) = 50;count++;
-              kgUpdateOn(G->D);
-              break;
-              case 14:
-              if ( count > 1 ) {
-                  loc--;count--;
-                  uiupdate_intr ( G , count , dc->cmds ) ;
-                  uiupdate_view ( G ) ;
-                  xx+= xo;yy+= yo;
-              }
-              kgUpdateOn(G->D);
-              break;
-              case 11:
-              ncr = i;
-              key = kgCrossCursor ( G , & xtxt , & ytxt ) ;
-              nch = get_intr_text ( parent , bf ) ;
-              nch = strlen ( bf ) ;
-              * ( bf+nch ) = '\0';
-              kgMove2f ( G , xtxt , ytxt ) ;
-              kgWriteText ( G , bf ) ;
-              i = nch+1;
-              * ( loc++ ) = 16+nch+1;count++;
-              kgUpdateOn(G->D);
-              break;
-              case 6:
-              npoly = uipolygon_fill ( G , xpoly , ypoly , dc->fil_color ) ;
-              {* ( loc++ ) = npoly;count++;};
-              last = 'f';
-              kgUpdateOn(G->D);
-              break;
-              case 16:
-//               *(loc++)=72;count++;  
-              * ( loc++ ) = uiset_atribs ( G ) ;
-              count++;
-              if ( dc->A_size > 10 ) A_fac = ( float ) \
-               ( dc->A_size/10 ) / ( dc->A_size%10 ) ;
-              kgUpdateOn(G->D);
-              break;
-              case 8:
-              Radius = ui_fix_radius(G,&xx,&yy);
-              break;
-              case 9:
-              count++;
-              * ( loc ) = ui_process_arc ( G , & xx , & yy ) ;
-              loc++;
-              kgUpdateOn(G->D);
-              break;
-              case 7:
-              key = kgRbrCursor ( G , & x , & y , & xx , & yy ) ;
-              uipa_gram ( G , xx , yy , x , y ) ;
-              xo = xx-x;yo = yy-y;
-              last = 'p';
-              * ( loc++ ) = 50;count++;
-              kgUpdateOn(G->D);
-              break;
-              case 12:
-              key = kgCrossCursor ( G , & x , & y ) ;
-              kgMarker2f ( G , x , y ) ;
-              * ( loc++ ) = 10;count++;
-              kgUpdateOn(G->D);
-              break;
-              case 15:
-              key = kgCrossCursor ( G , & x , & y ) ;
-              xx = xo+x;yy = yo+y;
-              switch ( ( int ) last ) {
-                  case 'd':
-                  kgMove2f ( G , xx , yy ) ;kgDraw2f ( G , x , y ) ;
-                  count++; * ( loc++ ) = 20;
-                  break;
-                  case 'a':
-                  kgMove2f ( G , xx , yy ) ;
-                  uidrarrow ( G , xx , yy , x , y , A_fac ) ;
-                  count++; * ( loc++ ) = 66;
-                  break;
-                  case 'c':
-                       /*move2f(xx,yy);circle(x,y,radi);   
-                       count++; *(loc++) = 24;*/
-                  break;
-                  case 'w':
-                  kgBoxFill ( G , xx , yy , x , y , dc->fil_color , 0 ) ;
-                  count++; * ( loc++ ) = 26;
-                  break;
-                  case 'f':{
-                      if ( npoly != 0 ) {
-                          float dx , dy;
-                          int np;
-//                           np = (npoly-26)/8;
-                          np = ( npoly-14 ) /8;
-                          dx = x-xpoly [ 0 ] ;
-                          dy = y-ypoly [ 0 ] ;
-                          for ( i = 0;i < np;i++ ) {xpoly [ i ] += dx;ypoly [ i ] += dy;}
-                          kgPolyFill ( G , np , xpoly , ypoly , 1L , dc->fil_color ) ;
-//                           *(loc++) = npoly-12; count++;
-                          * ( loc++ ) = npoly; count++;
-                      }
-                  }
-                  break;
-                  case 'r':
-                  uirectgl ( G , xx , yy , x , y ) ;
-                  count++; * ( loc++ ) = 50;
-                  break;
-                  case 'p':
-                  uipa_gram ( G , xx , yy , x , y ) ;
-                  count++; * ( loc++ ) = 50;
-                  break;
-                  case 'o':
-                  uiborder ( G , xx , yy , x , y , dc->bod_width , dc->bod_color ) ;
-                  count++; * ( loc++ ) = 104;
-                  break;
-              }
-              kgUpdateOn(G->D);
-              xx = x;yy = y;
-              break;
-              case 13:
-              while ( ( key = kgRectCursor ( G , & x , & y , & xx , & yy ) ) != '\r' ) {
-                  if ( key == 'u' ) {
-                      if ( count != 0 ) { loc--;count--;
-                          uiupdate_intr ( G , count , dc->cmds ) ;
-                  uiupdate_view ( G ) ;} }
-                  else {
-                      uiborder ( G , xx , yy , x , y , dc->bod_width , dc->bod_color ) ;
-                  * ( loc++ ) = 104;count++;}
-              }
-              uiborder ( G , xx , yy , x , y , dc->bod_width , dc->bod_color ) ;
-              xo = xx-x;yo = yy-y;
-              last = 'o';
-              * ( loc++ ) = 104;count++;
-              kgUpdateOn(G->D);
-              break;
-              case 10:
-              * ( loc ) = ui_process_arc_fill ( G , & xx , & yy , dc->fil_color ) ;
-              loc++;
-              count++;
-              kgUpdateOn(G->D);
-              break;
-              case 18:
-              if ( MAG ) {
-                  kgAntialiasingOn ( G , MAG-1 ) ;
-                  kgReview ( G ) ;
-              }
-              free ( dc->cmds ) ;
-              return;
-          }
-      }
-      return;
-  }
-
-static void *Args=NULL,*Rets=NULL;
-
-static DIAINTR *It = NULL;
-
-
-static MODINTERFACE ModFuns[] = { 
-    (MODINTERFACE) NULL 
-};
-static Dlink *ModuleList=NULL;
-#ifdef  D_kgFB
-void *RunkgFB(void *,void *);
-char * kgGetFolderName ( char *flname );
-
-static int ResetFBxboxes(void *Tmp) {
-  char filter[200],folder[300];
-  int ln;
-  DIT *T = (DIT *)kgGetNamedWidget(Tmp,(char *)"Txbox2");
-  strcpy(folder,kgGetString(T,0));
-  ln = strlen(folder);
-  if(ln > 1){if (folder[ln-1]=='/')  folder[ln-1]='\0';};  
-//  printf("Folder= %s\n",folder);
-  T = (DIT *)kgGetNamedWidget(Tmp,(char *)"Txbox1");
-  strcpy(filter,kgGetString(T,1));
-  DIX *X = (DIX *)kgGetNamedWidget(Tmp,(char *)"Xbox1");
-  kgFreeThumbNails((ThumbNail **)kgGetList(X));
-  char **menu = kgFolderMenu(folder);
-  if(menu != NULL) {
-     kgSetList(X,(void **)kgStringToThumbNails(menu));
-     kgFreeDouble((void **)menu);
-  }
-  else kgSetList(X,NULL);
-  kgUpdateWidget(X);   
-  X = (DIX *)kgGetNamedWidget(Tmp,(char *)"Xbox2");
-  kgFreeThumbNails((ThumbNail **)kgGetList(X));
-  menu = kgFileMenu(folder,filter);
-  if(menu != NULL) {
-     kgSetList(X,(void **)kgStringToThumbNails(menu));
-     kgFreeDouble((void **)menu);
-  }
-  else kgSetList(X,NULL);
-  kgUpdateWidget(X);   
-  kgUpdateOn(Tmp);
-}
- /* Callback for  Txbox1   */ 
-
-int kgFBTxbox1callback(int cellno,int i,void *Tmp) {
-  /************************************************* 
-   cellno: current cell counted along column strting with 0 
-           ie 0 to (nx*ny-1) 
-   i     : widget id starting from 0 
-   Tmp   : Pointer to DIALOG 
-   *************************************************/ 
-  DIALOG *D;DIT *T;T_ELMT *e; 
-  int ret=1;
-  void **pt= (void **)kgGetArgPointer(Tmp); // Change as required
-// pt[0] is args passed as inputs; pt[1] is output pointer
-  D = (DIALOG *)Tmp;
-  T = (DIT *)kgGetWidget(Tmp,i);
-  e = T->elmt;
-  ResetFBxboxes(Tmp);
-  return ret;
-}
-
- /* Callback for  Xbox1   */ 
-
-int kgFBXbox1callback(int item,int i,void *Tmp) {
-  /*********************************** 
-    item : selected item (1 to max_item) 
-    i :  Index of Widget  (0 to max_widgets-1) 
-    Tmp :  Pointer to DIALOG  
-   ***********************************/ 
-  DIALOG *D;DIX *X; 
-  int ret=1,ln; 
-  void **pt= (void **)kgGetArgPointer(Tmp); // Change as required
-// pt[0] is args passed as inputs; pt[1] is output pointer
-  D = (DIALOG *)Tmp;
-  X = (DIX *)kgGetWidget(Tmp,i);
-  char folder[300];
-  DIT *T= (DIT *)kgGetNamedWidget(Tmp,(char *)"Txbox2");
-  strcpy(folder,kgGetString(T,0));
-  ln = strlen(folder);
-  if(folder[ln-1] != '/') strcat(folder,(char *)"/");
-  strcat(folder,(char *) kgGetSelectedString(X));
-  strcat(folder,(char *) "/");
-//  printf("Selection: %s\n",folder);
-  kgSetString(T,0,folder);
-  kgUpdateWidget(T);
-  ResetFBxboxes(Tmp);
-  switch(item) {
-    case 1: 
-      break;
-  }
-  return ret;
-}
-void  kgFBXbox1init (DIX *X,void *ptmp) {
- // One may setup browser list here by setting X->list
- // if it need to be freed set it as X->pt also
- void **pt=(void **)ptmp; //pt[0] is arg 
-}
-
- /* Callback for  Xbox2   */ 
-
-int kgFBXbox2callback(int item,int i,void *Tmp) {
-  /*********************************** 
-    item : selected item (1 to max_item) 
-    i :  Index of Widget  (0 to max_widgets-1) 
-    Tmp :  Pointer to DIALOG  
-   ***********************************/ 
-  DIALOG *D;DIX *X; 
-  int ret=1; 
-  void **pt= (void **)kgGetArgPointer(Tmp); // Change as required
-// pt[0] is args passed as inputs; pt[1] is output pointer
-  D = (DIALOG *)Tmp;
-  X = (DIX *)kgGetWidget(Tmp,i);
-  DIT *T= (DIT *)kgGetNamedWidget(Tmp,(char *)"Txbox1");
-  char flname[300];
-  strcpy(flname,(char *) kgGetSelectedString(X));
-  kgSetString(T,0,flname);
-  kgUpdateWidget(T);
-  kgUpdateOn(Tmp);
-  switch(item) {
-    case 1: 
-      break;
-  }
-  return ret;
-}
-void  kgFBXbox2init (DIX *X,void *ptmp) {
- // One may setup browser list here by setting X->list
- // if it need to be freed set it as X->pt also
- void **pt=(void **)ptmp; //pt[0] is arg 
-}
-
- /* Callback for  Button1   */ 
-
-int kgFBButton1callback(int butno,int i,void *Tmp) {
-  /*********************************** 
-    butno : selected item (1 to max_item) 
-    i :  Index of Widget  (0 to max_widgets-1) 
-    Tmp :  Pointer to DIALOG  
-   ***********************************/ 
-  DIALOG *D;DIN *B; 
-  int n,ret =0; 
-  void **pt= (void **)kgGetArgPointer(Tmp); // Change as required
-// pt[0] is args passed as inputs; pt[1] is output pointer
-  D = (DIALOG *)Tmp;
-  B = (DIN *)kgGetWidget(Tmp,i);
-  n = B->nx*B->ny;
-  switch(butno) {
-    case 1: //  Update 
-      break;
-  }
-  return ret;
-}
-void  kgFBButton1init (DIN *B,void *ptmp) {
- void **pt=(void **)ptmp; //pt[0] is arg 
-// may use kgChangeButtonNormalImage etc...
- BUT_STR *buts;
- buts = (BUT_STR *) (B->buts);
-}
-
- /* Callback for  Splbutn1   */ 
-
-int kgFBSplbutn1callback( int butno,int i,void *Tmp) {
-  /*********************************** 
-    butno : selected item (1 to max_item) 
-    i :  Index of Widget  (0 to max_widgets-1) 
-    Tmp :  Pointer to DIALOG  
-   ***********************************/ 
-  DIALOG *D;DIL *B; 
-  int n,ret=1; 
-  void **pt= (void **)kgGetArgPointer(Tmp); // Change as required
-// pt[0] is args passed as inputs; pt[1] is output pointer
-  void **args= (void **)(pt[0]);
-  char *fl = (char *)args[2];
-  D = (DIALOG *)Tmp;
-  B = (DIL *) kgGetWidget(Tmp,i);
-  n = B->nx;
-  char flname[300];
-  switch(butno) {
-    case 1: //  !c15Cancel 
-     pt[1]= NULL;
-      break;
-    case 2: //  !c15Okay 
-      DIT *T = (DIT *)kgGetNamedWidget(Tmp,(char *)"Txbox2");
-      strcpy(flname,kgGetString(T,0));
-      int ln = strlen(flname);
-      if(flname[ln-1]!= '/') strcat(flname,(char *)"/");
-      T = (DIT *)kgGetNamedWidget(Tmp,(char *)"Txbox1");
-      strcat(flname,kgGetString(T,0));
-      strcpy(fl,flname);
-      pt[1]=fl;
-      break;
-  }
-  return ret;
-}
-void  kgFBSplbutn1init (DIL *B,void *ptmp) {
- void **pt=(void **)ptmp; //pt[0] is arg 
-// may use kgChangeButtonNormalImage etc...
- BUT_STR *buts;
- buts = (BUT_STR *) (B->buts);
-}
-
- /* Callback for  Button2   */ 
-
-int kgFBButton2callback(int butno,int i,void *Tmp) {
-  /*********************************** 
-    butno : selected item (1 to max_item) 
-    i :  Index of Widget  (0 to max_widgets-1) 
-    Tmp :  Pointer to DIALOG  
-   ***********************************/ 
-  DIALOG *D;DIN *B; 
-  int n,ret =0,k; 
-  void **pt= (void **)kgGetArgPointer(Tmp); // Change as required
-// pt[0] is args passed as inputs; pt[1] is output pointer
-  D = (DIALOG *)Tmp;
-  B = (DIN *)kgGetWidget(Tmp,i);
-  n = B->nx*B->ny;
-  char folder[300];
-  DIT *T = (DIT *)kgGetNamedWidget(Tmp,(char *)"Txbox2");
-  strcpy(folder,kgGetString(T,0));
-          k = strlen ( folder ) ;
-          if( (k>1)&& (folder[k-1]=='/')) {
-             k--;
-             folder[k]='\0';
-          }
-          k--;
-          while ( ( folder[ k ] != '/' ) && ( k > 0 ) ) \
-              {folder [ k ] = '\0';k--;}
-          kgSetString(T,0,folder);
-          kgUpdateWidget(T);
-          ResetFBxboxes(Tmp);
-  switch(butno) {
-    case 1: //   
-      break;
-  }
-  return ret;
-}
-void  kgFBButton2init (DIN *B,void *ptmp) {
- void **pt=(void **)ptmp; //pt[0] is arg 
-// may use kgChangeButtonNormalImage etc...
- BUT_STR *buts;
- buts = (BUT_STR *) (B->buts);
- kgChangeButtonNormalImage(B,0,kgUpdirImage(30,130,140,130));
-}
-
- /* Callback for  Button3   */ 
-
-int kgFBButton3callback(int butno,int i,void *Tmp) {
-  /*********************************** 
-    butno : selected item (1 to max_item) 
-    i :  Index of Widget  (0 to max_widgets-1) 
-    Tmp :  Pointer to DIALOG  
-   ***********************************/ 
-  DIALOG *D;DIN *B; 
-  int n,ret =0; 
-  void **pt= (void **)kgGetArgPointer(Tmp); // Change as required
-// pt[0] is args passed as inputs; pt[1] is output pointer
-  D = (DIALOG *)Tmp;
-  B = (DIN *)kgGetWidget(Tmp,i);
-  n = B->nx*B->ny;
-  DIT *T = (DIT *)kgGetNamedWidget(Tmp,(char *)"Txbox2");
-  kgSetString(T,0,getenv("PWD"));
-  kgUpdateWidget(T);
-  ResetFBxboxes(Tmp);
-  switch(butno) {
-    case 1: //   
-      break;
-  }
-  return ret;
-}
-void  kgFBButton3init (DIN *B,void *ptmp) {
- void **pt=(void **)ptmp; //pt[0] is arg 
-// may use kgChangeButtonNormalImage etc...
- BUT_STR *buts;
- buts = (BUT_STR *) (B->buts);
- kgChangeButtonNormalImage(B,0,kgHomeImage(30,130,140,130));
-}
-int kgFBSetup(void *Tmp,void *args) {
-  /*********************************** 
-    args :  Pointer to args  
-   ***********************************/ 
-  /* you add any initialisation here */
-  /* useful for setting is used as MakeGroup */
-  return 1;
-}
- 
-void * kgFBCleanDia(void *args) {
-  /*********************************** 
-    args :  Pointer to args  
-   ***********************************/ 
-  
-/* you add any cleaning  here */
-
-  return NULL;
-}
- 
- 
-void *  kgFBAction(void *Tmp,void *Args) {
-  return NULL;
-} 
- 
- 
-int   kgFBOn(void *itmp) {
-  DIAINTR * Dt = (DIAINTR *) itmp;
-  if(Dt == NULL ) Dt = (DIAINTR *)It;
-  if(Dt != NULL) {
-    if(Dt->Dtmp != NULL)kgSetGrpVisibility(Dt->Dtmp,Dt->GrpId,1);
-    else return 0;
-    return 1;
-  } 
-  return 0;
-} 
- 
-int   kgFBOff(void *itmp) {
-  DIAINTR * Dt = (DIAINTR *) itmp;
-  if(Dt == NULL ) Dt = (DIAINTR *)It;
-  if(Dt != NULL) {
-    if(Dt->Dtmp != NULL)kgSetGrpVisibility(Dt->Dtmp,Dt->GrpId,0);
-    else return 0;
-    return 1;
-  } 
-  return 0;
-} 
- 
-static char *GetPointer(char *str) { 
-  char *pt; 
-  pt = (char *)malloc(strlen(str)+1); 
-  strcpy(pt,str); 
-  return pt; 
-} 
- 
- 
-int MakekgFBGroup(DIALOG *D,void *arg);
-void * kgFBInterface(void *args,void *rets) {
-  /*********************************** 
-   ***********************************/ 
-  DIAINTR *it= (DIAINTR *)malloc(sizeof(DIAINTR));
-  it->GrpId=0;
-  // filled by MakeGroup  it->xsh=0;
-  it->ysh=0;
-  it->RunDia = RunkgFB;
-  it->MakeGroup = MakekgFBGroup;
-  it->Title = GetPointer((char *)"kgFB");
-  it->Help = GetPointer( (char *)"No help yet, request");
-  it->Action = kgFBAction;
-  it->Settings = kgFBSetup;
-  it->Cleanup  = kgFBCleanDia;
-  if(args != NULL) Args=args;
-  if(rets != NULL) Rets=rets;
-  it->args = Args;
-  it->rets = Rets;
-  it->SwitchOn = kgFBOn;
-  it->SwitchOff = kgFBOff;
-  it->Dtmp = NULL; // fiiled by MakeGroup 
-  It = it;
-  return it;
-}
- 
- 
-int kgFBTxbox2callback(int cellno,int i,void *Tmp) {
-  /************************************************* 
-   cellno: current cell counted along column strting with 0 
-           ie 0 to (nx*ny-1) 
-   i     : widget id starting from 0 
-   Tmp   : Pointer to DIALOG 
-   *************************************************/ 
-  DIALOG *D;DIT *T;T_ELMT *e; 
-  int ret=1;
-  void **pt= (void **)kgGetArgPointer(Tmp); // Change as required
-// pt[0] is args passed as inputs; pt[1] is output pointer
-  D = (DIALOG *)Tmp;
-  T = (DIT *)kgGetWidget(Tmp,i);
-  e = T->elmt;
-  ResetFBxboxes(Tmp);
-  return ret;
-}
-int kgFBButton4callback(int butno,int i,void *Tmp) {
-  /*********************************** 
-    butno : selected item (1 to max_item) 
-    i :  Index of Widget  (0 to max_widgets-1) 
-    Tmp :  Pointer to DIALOG  
-   ***********************************/ 
-  DIALOG *D;DIN *B; 
-  int n,ret =0; 
-  void **pt= (void **)kgGetArgPointer(Tmp); // Change as required
-// pt[0] is args passed as inputs; pt[1] is output pointer
-  D = (DIALOG *)Tmp;
-  B = (DIN *)kgGetWidget(Tmp,i);
-  n = B->nx*B->ny;
-  switch(butno) {
-    case 1: //  Go 
-      break;
-  }
-  return ret;
-}
-void  kgFBButton4init (DIN *B,void *ptmp) {
- void **pt=(void **)ptmp; //pt[0] is arg 
-// may use kgChangeButtonNormalImage etc...
- BUT_STR *buts;
- buts = (BUT_STR *) (B->buts);
-}
-int kgFBGocallback(int butno,int i,void *Tmp) {
-  /*********************************** 
-    butno : selected item (1 to max_item) 
-    i :  Index of Widget  (0 to max_widgets-1) 
-    Tmp :  Pointer to DIALOG  
-   ***********************************/ 
-  DIALOG *D;DIN *B; 
-  int n,ret =0; 
-  void **pt= (void **)kgGetArgPointer(Tmp); // Change as required
-// pt[0] is args passed as inputs; pt[1] is output pointer
-  D = (DIALOG *)Tmp;
-  B = (DIN *)kgGetWidget(Tmp,i);
-  n = B->nx*B->ny;
-  ResetFBxboxes(Tmp);
-  switch(butno) {
-    case 1: //  Go 
-      break;
-  }
-  return ret;
-}
-void  kgFBGoinit (DIN *B,void *ptmp) {
- void **pt=(void **)ptmp; //pt[0] is arg 
-// may use kgChangeButtonNormalImage etc...
- BUT_STR *buts;
- buts = (BUT_STR *) (B->buts);
-}
-int kgFBRefreshcallback(int butno,int i,void *Tmp) {
-  /*********************************** 
-    butno : selected item (1 to max_item) 
-    i :  Index of Widget  (0 to max_widgets-1) 
-    Tmp :  Pointer to DIALOG  
-   ***********************************/ 
-  DIALOG *D;DIN *B; 
-  int n,ret =0; 
-  void **pt= (void **)kgGetArgPointer(Tmp); // Change as required
-// pt[0] is args passed as inputs; pt[1] is output pointer
-  D = (DIALOG *)Tmp;
-  B = (DIN *)kgGetWidget(Tmp,i);
-  n = B->nx*B->ny;
-  ResetFBxboxes(Tmp);
-  switch(butno) {
-    case 1: //  Refresh 
-      break;
-  }
-  return ret;
-}
-void  kgFBRefreshinit (DIN *B,void *ptmp) {
- void **pt=(void **)ptmp; //pt[0] is arg 
-// may use kgChangeButtonNormalImage etc...
- BUT_STR *buts;
- buts = (BUT_STR *) (B->buts);
-}
-int kgFBinit(void *Tmp) {
-  /*********************************** 
-    Tmp :  Pointer to DIALOG  
-   ***********************************/ 
-  /* you add any initialisation here */
-  int ret = 1;
-  DIALOG *D;
-  D = (DIALOG *)Tmp;
-  void **pt= (void **)kgGetArgPointer(Tmp); // Change as required
-// pt[0] is args passed as inputs; pt[1] is output pointer
- /* pt[0] is inputs, given by caller */
-  void **iargs=(void **)pt[0];
-  int index=0;
-  char flname[300];
-  char filter[200];
-  char folder[300];
-  strcpy(flname,(char *)iargs[2]);
-  strcpy(filter,(char *)iargs[3]);
-  char *fpt = kgGetFolderName(flname);
-  if(fpt == NULL) strcpy(folder,getenv("PWD"));
-  else {
-    index=strlen(fpt);
-    strcpy(folder,fpt);
-    free(fpt);
-  }
-  DIT *T = (DIT *)kgGetNamedWidget(Tmp,(char *)"Txbox2");
-  kgSetString(T,0,folder);
-  kgUpdateWidget(T);
-  T = (DIT *)kgGetNamedWidget(Tmp,(char *)"Txbox1");
-  DII *I = (DII *)kgGetNamedWidget(Tmp,(char *)"Info");
-  kgSetString(T,0,flname+index);
-  kgSetString(T,1,filter);
-  kgUpdateWidget(T);
-  kgWrite(I,folder);
-  ResetFBxboxes(Tmp);
-  kgUpdateOn(Tmp);
-  return ret;
-}
-int kgFBcleanup(void *Tmp) {
-  /* you add any cleanup/mem free here */
-  /*********************************** 
-    Tmp :  Pointer to DIALOG  
-   ***********************************/ 
-  int ret = 1;
-  DIALOG *D;
-  D = (DIALOG *)Tmp;
-  void **pt= (void **)kgGetArgPointer(Tmp); // Change as required
-// pt[0] is args passed as inputs; pt[1] is output pointer
- /* pt[1] is outputs, if any  to be given to caller */
- /* pt[0] is inputs, given by caller */
-  return ret;
-}
-int ModifykgFB(void *Tmp,int GrpId) {
-  DIALOG *D;
-  D = (DIALOG *)Tmp;
-  void **pt= (void **)kgGetArgPointer(Tmp); // Change as required
-// pt[0] is args passed as inputs; pt[1] is output pointer
- /* pt[0] is inputs given by caller */
-  int *ipt;
-  void **iargs;
-  iargs = (void **)(pt[0]);
-  DIA *d;
-  int i,n;
-  kgCheckParentPosition(Tmp);
-  d = D->d;
-
-  if( ModuleList == NULL) ModuleList = kgGetModuleList((void **)ModFuns);
-  i=0;
-  void *args=NULL;
-  DIAINTR *Dt;
-  Resetlink(ModuleList);
-  while ( (Dt=(DIAINTR *)Getrecord(ModuleList)) != NULL) {
-    Dt->GrpId = Dt->MakeGroup(Tmp,NULL);
-    kgShiftGrp(Tmp,Dt->GrpId,Dt->xsh,Dt->ysh);
-    Dt->Settings(Tmp,args);
-    i++;
-  };
-
-  i=0;while(d[i].t!= NULL) {;
-     i++;
-  };
-  n=1;
-//  strcpy(D->name,"Kulina Designer ver 3.0");    /*  Dialog name you may change */
-  ipt = (int *)iargs[0];
-  D->xo = *ipt;
-  ipt = (int *)iargs[1];
-  D->yo = *ipt;
-#if 0
-  if(D->fullscreen!=1) {    /*  if not fullscreen mode */
-     int xres,yres; 
-     kgDisplaySize(&xres,&yres); 
-      // D->xo=D->yo=0; D->xl = xres-10; D->yl=yres-80;
-  }
-  else {    // for fullscreen
-     int xres,yres; 
-     kgDisplaySize(&xres,&yres); 
-     D->xo=D->yo=0; D->xl = xres; D->yl=yres;
-//     D->StackPos = 1; // you may need it
-  }    /*  end of fullscreen mode */
-#endif
-  return GrpId;
-}
-
-int kgFBCallBack(void *Tmp,void *tmp) {
-  /*********************************** 
-    Tmp :  Pointer to DIALOG  
-    tmp :  Pointer to KBEVENT  
-   ***********************************/ 
-  int ret = 0;
-  DIALOG *D;
-  void **pt= (void **)kgGetArgPointer(Tmp); // Change as required
-// pt[0] is args passed as inputs; pt[1] is output pointer
-  KBEVENT *kbe;
-  D = (DIALOG *)Tmp;
-  kbe = (KBEVENT *)tmp;
-  if(kbe->event ==1) {
-    if(kbe->button ==1) {
-    }
-  }
-  return ret;
-}
-int kgFBResizeCallBack(void *Tmp) {
-  /*********************************** 
-    Tmp :  Pointer to DIALOG  
-   ***********************************/ 
-  int ret = 0;
-  int xres,yres,dx,dy;
-  DIALOG *D;
-  void **pt= (void **)kgGetArgPointer(Tmp); // Change as required
-// pt[0] is args passed as inputs; pt[1] is output pointer
-  D = (DIALOG *)Tmp;
-  kgGetWindowSize(D,&xres,&yres);
-  dx = xres - D->xl;
-  dy = yres - D->yl;
-  /* extra code */
-  D->xl= xres;
-  D->yl= yres;
-  kgRedrawDialog(D);
-  return ret;
-}
-int kgFBWaitCallBack(void *Tmp) {
-  /*********************************** 
-    Tmp :  Pointer to DIALOG  
-    Called while waiting for event  
-    return value 1 will close the the UI  
-   ***********************************/ 
-  int ret = 0;
-  void **pt= (void **)kgGetArgPointer(Tmp); // Change as required
-// pt[0] is args passed as inputs; pt[1] is output pointer
-  return ret;
-}
-void ModifykgFBGc(void *Tmp) {
-   DIALOG *D;
-   Gclr *gc;
-   D = (DIALOG *)Tmp;
-   gc = &(D->gc);
-/*
-//  You may change default settings here 
-//  probably you can allow the user to create a config in $HOME
-//  and try to read that file (if exits); so dynamic configuration is possible
-   kgColorTheme(D,220,220,200);
-   kgColorTheme1(D,220,220,200);
-   kgColorTheme2(D,220,220,200);
-   kgDefaultGuiTheme(gc);
-   kgGrayGuiTheme(gc);
-   gc->FontSize =9;
-   gc->GuiFontSize =9;
-   gc->InputFontSize =8;
-   gc->MenuFont = 21;
-   gc->PromptFont = 21;
-   gc->ButtonFont = 21;
-   gc->MsgFont = 21;
-   gc->Font=23;
-   kgMkgclr((char *)"kgFB",Tmp);
-*/
-}
-int kgFBGroup( DIALOG *D,void **v,void *pt) {
-  int GrpId=0,oitems=0,i,j;
-  DIA *d=NULL,*dtmp;
-  T_ELMT *e0  ; 
-  e0 =(T_ELMT *)malloc(sizeof(T_ELMT)*2);
-  e0[0].fmt = (char *)malloc(15);
-  strcpy(e0[0].fmt,(char *)"File Name:%30s");
-  e0[0].v=(void *)v[0];
-  e0[0].sw=1;
-  e0[0].noecho=0;
-  e0[0].img=NULL;
-  e0[1].fmt = (char *)malloc(15);
-  strcpy(e0[1].fmt,(char *)"Filter   :%30s");
-  e0[1].v=(void *)v[1];
-  e0[1].sw=1;
-  e0[1].noecho=0;
-  e0[1].img=NULL;
-  DIT t0 = { 
-    't',
-    20,18,  
-    426,84,
-    24, 
-    1,2, 
-    e0,
-    1,1,
-    NULL,kgFBTxbox1callback ,0 ,0,5,9 
-  };
-    /* *args,Callback,border,hide,font,fontsize */
-  strcpy(t0.Wid,(char *)"Txbox1");
-  t0.pt=NULL;
-  t0.type = 1;
-  t0.Font = -1;
-  t0.FontSize = 9;
-  t0.item = -1;
-  DII i1 = { 
-    'i',
-    91,94,  
-    472,121,  
-    41,1,1   
-  };
-  strcpy(i1.Wid,(char *)"Info");
-  i1.item = -1;
-  DIX x2 = { 
-    'x',
-    17,124,  
-    267,366,   
-    10,2,  
-    208, 
-    18, 
-    1,103396080, 
-    0,11, 
-    (int *)v[2], 
-    NULL, 
-    NULL, 
-    NULL,kgFBXbox1callback , /* *args, Callback  */
-    6,  /* Border Offset  */
-     22,  /* Scroll width  */
-     2,  /* Type  */
-     1, /* item highlight */
-    0, /* bordr */
-    1, /* bkgr */
-    0  /*=1 hide  */
-   };
-  strcpy(x2.Wid,(char *)"Xbox1");
-  x2.item = -1;
-  DIX x3 = { 
-    'x',
-    268,124,  
-    518,366,   
-    10,2,  
-    208, 
-    18, 
-    1,103396080, 
-    0,11, 
-    (int *)v[3], 
-    NULL, 
-    NULL, 
-    NULL,kgFBXbox2callback , /* *args, Callback  */
-    6,  /* Border Offset  */
-     22,  /* Scroll width  */
-     2,  /* Type  */
-     1, /* item highlight */
-    0, /* bordr */
-    1, /* bkgr */
-    0  /*=1 hide  */
-   };
-  strcpy(x3.Wid,(char *)"Xbox2");
-  x3.item = -1;
-  BUT_STR  *butn4=NULL; 
-  butn4= (BUT_STR *)malloc(sizeof(BUT_STR)*1);
-  butn4[0].sw=1;
-  strcpy(butn4[0].title,(char *)"Refresh");
-  butn4[0].xpmn=NULL;
-  butn4[0].xpmp=NULL;
-  butn4[0].xpmh=NULL;
-  butn4[0].bkgr=-216226216;
-  butn4[0].butncode=31;
-  DIN b4 = { 
-    'n',
-    426,55,  
-    500,89,
-    2,2,  
-    64, 
-    24, 
-    1,1, 
-    2,0.500000,0,0,0,1,/* button type and roundinfg factor(0-0.5),bordr,hide ,nodrawbkgr*/ 
-    butn4, 
-    kgFBRefreshcallback , /* *args, Callback */
-    NULL  /* any args */
-  };
-  strcpy(b4.Wid,(char *)"Refresh");
-  b4.item = -1;
-  BUT_STR  *butn5=NULL; 
-  butn5= (BUT_STR *)malloc(sizeof(BUT_STR)*2);
-  butn5[0].sw=1;
-  strcpy(butn5[0].title,(char *)"!c03Cancel");
-  butn5[0].xpmn=NULL;
-  butn5[0].xpmp=NULL;
-  butn5[0].xpmh=NULL;
-  butn5[0].bkgr=-216226216;
-  butn5[0].butncode=34942;
-  butn5[1].sw=1;
-  strcpy(butn5[1].title,(char *)"!c38Okay");
-  butn5[1].xpmn=NULL;
-  butn5[1].xpmp=NULL;
-  butn5[1].xpmh=NULL;
-  butn5[1].bkgr=-216226216;
-  butn5[1].butncode=30991486;
-  DIL h5 = { 
-    'h',
-    181,368,  
-    350,397,
-    10,0,  
-    72, 
-    24, 
-    2,1, 
-    7,0.500000,0,0,0,1,/* button type and roundinfg factor(0-0.5),bordr,hide ,nodrawbkgr*/ 
-    butn5, 
-    kgFBSplbutn1callback ,  /* *args, Callback */
-    NULL  /* any args */
-  };
-  strcpy(h5.Wid,(char *)"Splbutn1");
-  h5.item = -1;
-  BUT_STR  *butn6=NULL; 
-  butn6= (BUT_STR *)malloc(sizeof(BUT_STR)*1);
-  butn6[0].sw=1;
-  strcpy(butn6[0].title,(char *)"");
-  butn6[0].xpmn=NULL;
-  butn6[0].xpmp=NULL;
-  butn6[0].xpmh=NULL;
-  butn6[0].bkgr=-1;
-  butn6[0].butncode=31;
-  DIN b6 = { 
-    'n',
-    57,88,  
-    92,123,
-    2,2,  
-    30, 
-    30, 
-    1,1, 
-    8,0.150000,0,0,0,1,/* button type and roundinfg factor(0-0.5),bordr,hide ,nodrawbkgr*/ 
-    butn6, 
-    kgFBButton2callback , /* *args, Callback */
-    NULL  /* any args */
-  };
-  strcpy(b6.Wid,(char *)"Button2");
-  b6.item = -1;
-  BUT_STR  *butn7=NULL; 
-  butn7= (BUT_STR *)malloc(sizeof(BUT_STR)*1);
-  butn7[0].sw=1;
-  strcpy(butn7[0].title,(char *)"");
-  butn7[0].xpmn=NULL;
-  butn7[0].xpmp=NULL;
-  butn7[0].xpmh=NULL;
-  butn7[0].bkgr=-1;
-  butn7[0].butncode=126;
-  DIN b7 = { 
-    'n',
-    20,88,  
-    57,123,
-    2,2,  
-    30, 
-    30, 
-    1,1, 
-    8,0.150000,0,0,0,1,/* button type and roundinfg factor(0-0.5),bordr,hide ,nodrawbkgr*/ 
-    butn7, 
-    kgFBButton3callback , /* *args, Callback */
-    NULL  /* any args */
-  };
-  strcpy(b7.Wid,(char *)"Button3");
-  b7.item = -1;
-  T_ELMT *e8  ; 
-  e8 =(T_ELMT *)malloc(sizeof(T_ELMT)*1);
-  e8[0].fmt = (char *)malloc(11);
-  strcpy(e8[0].fmt,(char *)"Folder%26s");
-  e8[0].v=(void *)v[4];
-  e8[0].sw=1;
-  e8[0].noecho=0;
-  e8[0].img=NULL;
-  DIT t8 = { 
-    't',
-    90,89,  
-    431,119,
-    24, 
-    1,1, 
-    e8,
-    1,1,
-    NULL,kgFBTxbox2callback ,0 ,0,5,9 
-  };
-    /* *args,Callback,border,hide,font,fontsize */
-  strcpy(t8.Wid,(char *)"Txbox2");
-  t8.pt=NULL;
-  t8.type = 1;
-  t8.Font = -1;
-  t8.FontSize = 9;
-  t8.item = -1;
-  BUT_STR  *butn9=NULL; 
-  butn9= (BUT_STR *)malloc(sizeof(BUT_STR)*1);
-  butn9[0].sw=1;
-  strcpy(butn9[0].title,(char *)"Go");
-  butn9[0].xpmn=NULL;
-  butn9[0].xpmp=NULL;
-  butn9[0].xpmh=NULL;
-  butn9[0].bkgr=-216226216;
-  butn9[0].butncode=12688766;
-  DIN b9 = { 
-    'n',
-    425,88,  
-    463,123,
-    0,0,  
-    30, 
-    30, 
-    1,1, 
-    7,0.500000,0,0,0,1,/* button type and roundinfg factor(0-0.5),bordr,hide ,nodrawbkgr*/ 
-    butn9, 
-    kgFBGocallback , /* *args, Callback */
-    NULL  /* any args */
-  };
-  strcpy(b9.Wid,(char *)"Go");
-  b9.item = -1;
-  dtmp = D->d;
-  i=0;
-  if(dtmp!= NULL) while(dtmp[i].t!=NULL)i++;
-  dtmp = (DIA *)realloc(dtmp,sizeof(DIA )*(i+11));
-  d =dtmp+i; 
-  d[10].t=NULL;
-  d[0].t = (DIT *)malloc(sizeof(DIT));
-  *d[0].t = t0;
-  d[0].t->item = -1;
-  d[1].t = (DIT *)malloc(sizeof(DII));
-  *d[1].i = i1;
-  d[1].i->item = -1;
-  d[2].t = (DIT *)malloc(sizeof(DIX));
-  *d[2].x = x2;
-  d[2].x->item = -1;
-  kgFBXbox1init(d[2].x,pt) ;
-  d[3].t = (DIT *)malloc(sizeof(DIX));
-  *d[3].x = x3;
-  d[3].x->item = -1;
-  kgFBXbox2init(d[3].x,pt) ;
-  d[4].t = (DIT *)malloc(sizeof(DIN));
-  *d[4].N = b4;
-  d[4].N->item = -1;
-  kgFBRefreshinit(d[4].N,pt) ;
-  d[5].t = (DIT *)malloc(sizeof(DIL));
-  *d[5].h = h5;
-  d[5].h->item = -1;
-  kgFBSplbutn1init(d[5].h,pt) ;
-  d[6].t = (DIT *)malloc(sizeof(DIN));
-  *d[6].N = b6;
-  d[6].N->item = -1;
-  kgFBButton2init(d[6].N,pt) ;
-  d[7].t = (DIT *)malloc(sizeof(DIN));
-  *d[7].N = b7;
-  d[7].N->item = -1;
-  kgFBButton3init(d[7].N,pt) ;
-  d[8].t = (DIT *)malloc(sizeof(DIT));
-  *d[8].t = t8;
-  d[8].t->item = -1;
-  d[9].t = (DIT *)malloc(sizeof(DIN));
-  *d[9].N = b9;
-  d[9].N->item = -1;
-  kgFBGoinit(d[9].N,pt) ;
-  d[10].t = NULL;
-  GrpId=kgOpenGrp(D);
-  D->d = dtmp;
-  j=0;
-  while(d[j].t!=NULL){ kgAddtoGrp(D,GrpId,(void *)(d[j].t));j++;}
-  return GrpId;
-} 
-
-/* One can also use the following code to add Widgets to an existing Dialog */
-
-int MakekgFBGroup(DIALOG *D,void *arg) {
-   int GrpId;
-   WIDGETGRP *Gpt;
-/*************************************************
-
-    Text_Box1  2 data values
-    Selectmenu1  1 data value
-    Selectmenu2  1 data value
-    Text_Box2  1 data values
-
-*************************************************/
-   char  *v0 ;
-   v0 = (char *)malloc(sizeof(char)*500);
-   v0[0] = '\0';
-   char  *v1 ;
-   v1 = (char *)malloc(sizeof(char)*500);
-   v1[0] = '\0';
-   int  *v2 ;
-   v2 = (int *)malloc(sizeof(int));
-   *v2 = 1;
-   int  *v3 ;
-   v3 = (int *)malloc(sizeof(int));
-   *v3 = 1;
-   char  *v4 ;
-   v4 = (char *)malloc(sizeof(char)*500);
-   v4[0] = '\0';
-   void** v=(void **)malloc(sizeof(void*)*6);
-   v[5]=NULL;
-   v[0]=(void *)(v0);
-   v[1]=(void *)(v1);
-   v[2]=(void *)(v2);
-   v[3]=(void *)(v3);
-   v[4]=(void *)(v4);
-   void *pt=NULL; /* pointer to send any extra information */
-                  /* it will be aviilable in Callbacks */
-   GrpId = kgFBGroup(D,v,pt);
-   Gpt = kgGetWidgetGrp(D,GrpId);
-   Gpt->arg= v; // kulina will double free this; you may modify
-   kgFBSetup(D,Gpt->arg);
-   return GrpId;
-}
-
-int kgFB( void *parent,void **v,void *pt) {
-  int ret=1,GrpId,k;
-  DIALOG D;
-  DIA *d=NULL;
-  D.VerId=-1685927296;
-  kgInitUi(&D);
-  D.d=NULL;
-#if 1
-  GrpId = kgFBGroup(&D,v,pt);
-#else 
-  GrpId = MakekgFBGroup(&D,pt); // can try this also
-#endif 
-  d = D.d;
-  D.d = d;
-  D.bkup = 1; /* set to 1 for backup */
-  D.bor_type = 4;
-  D.df = 9;
-  D.tw = 4;
-  D.bw = 4;
-  D.lw = 4;
-  D.rw = 4;
-  D.xo = 200;   /* Position of Dialog */ 
-  D.yo = 200;
-  D.xl = 530;    /*  Length of Dialog */
-  D.yl = 402;    /*  Width  of Dialog */
-  D.Initfun = kgFBinit;    /*   init fuction for Dialog */
-  D.Cleanupfun = kgFBcleanup;    /*   cleanup fuction for Dialog */
-  D.kbattn = 0;    /*  1 for drawing keyborad attention */
-  D.butattn = 0;    /*  1 for drawing button attention */
-  D.fullscreen = 0;    /*  1 for for fullscreen mode */
-  D.NoTabProcess = 0;    /*  1 for disabling Tab use */
-  D.Deco = 1;    /*  1 for Window Decorration */
-  D.transparency = 0.000000;    /*  float 1.0 for full transparency */
-  D.Newwin = 1;    /*  1 for new window not yet implemented */
-  D.DrawBkgr = 1;    /*  1 for drawing background */
-  D.Bkpixmap = NULL;    /*  background image */
-  D.Sticky = 0;    /*  1 for stickyness */
-  D.Resize = 0;    /*  1 for Resize option */
-  D.MinWidth = 100;    /*   for Resize option */
-  D.MinHeight = 100;    /*   for Resize option */
-#if 1 
-  D.Callback = kgFBCallBack;    /*  default Callback  */
-#else 
-  D.Callback = NULL;    
-#endif
-  D.ResizeCallback = kgFBResizeCallBack;  /*  Resize callback */
-#if 0 
-  D.WaitCallback = NULL;  /*  Wait callback */
-#else 
-  D.WaitCallback = kgFBWaitCallBack;  /*  Wait callback */
-#endif
-  D.Fixpos = 0;    /*  1 for Fixing Position */
-  D.NoTaskBar = 0;    /*  1 for not showing in task bar*/
-  D.NoWinMngr = 0;    /*  1 for no Window Manager*/
-  D.StackPos = 1;    /* -1,0,1 for for Stack Position -1:below 0:normal 1:above*/
-  D.Shapexpm = NULL;    /*  PNG/jpeg file for window shape;Black color will not be drawn */
-  D.parent = parent;    /*  1 for not showing in task bar*/
-  D.pt = pt;    /*  any data to be passed by user*/
-//  strcpy(D.name,"Kulina Designer ver 3.0");    /*  Dialog name you may change */
-  if(D.fullscreen!=1) {    /*  if not fullscreen mode */
-     int xres,yres; 
-     kgDisplaySize(&xres,&yres); 
-      // D.xo=D.yo=0; D.xl = xres-10; D.yl=yres-80;
-  }
-  else {    // for fullscreen
-     int xres,yres; 
-     kgDisplaySize(&xres,&yres); 
-     D.xo=D.yo=0; D.xl = xres; D.yl=yres;
-//     D.StackPos = 1; // you may need it
-  }    /*  end of fullscreen mode */
-  ModifykgFBGc(&D);    /*  set colors for gui if do not like default*/
-  ModifykgFB(&D,GrpId);    /*  add extras to  gui*/
-  ret= kgUi(&D);
-  kgCleanUi(&D);
-  if(D.parent != NULL) kgUpdateOn(D.parent);
-  return ret;
-}
-void *RunkgFB(void *parent ,void *args) {
-/*************************************************
-
-    Text_Box1  2 data values
-    Selectmenu1  1 data value
-    Selectmenu2  1 data value
-    Text_Box2  1 data values
-
-*************************************************/
-   char  v0[500]="" ;
-   char  v1[500]="" ;
-   int   v2 = 1;
-   int   v3 = 1;
-   char  v4[500]="" ;
-   void* v[5];
-   v[0]=(void *)(v0);
-   v[1]=(void *)(v1);
-   v[2]=(void *)(&v2);
-   v[3]=(void *)(&v3);
-   v[4]=(void *)(v4);
-   void *pt[2]={NULL,NULL}; /* pointer to send any extra information */
-                  /* it will be aviilable in Callbacks */
-   pt[0]=args;
-   kgFB(parent,v,(void *)pt );
-   return pt[1];
-}
-int kgFolderBrowser(void *Tmp,int xo,int yo,char *flname,char *filter) {
-    char *pt[5];
-    void *res;
-    pt[4]=NULL;
-    pt[0]= (void *)malloc(sizeof(int));
-    *((int *)pt[0])=xo;
-    pt[1]= (void *)malloc(sizeof(int));
-    *((int *)pt[1])=yo;
-    pt[2]=flname;
-    pt[3]= filter;
-    res =RunkgFB(Tmp,pt);
-    if(res == NULL) return 0;
-    strcpy(flname,res);
-    free(pt[0]);
-    free(pt[1]);
-    return 1;
-}
-#endif

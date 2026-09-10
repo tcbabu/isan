@@ -117,6 +117,7 @@ char * DgetFlagArg(Dlink *Alist,char **argv,char *flag,int nv); //Alist from Dge
 char **  DprocessFlags(char *argv[],DARGS fargpt[]);
 Dlink *Dreadfile(char *flname);
 int Dwritefile(Dlink *L,char *flname);
+int Dappendfile(Dlink *L,char *flname);
 int Dpush(Dlink *L,void *bf);
 void * Dpop(Dlink *L);
 int Dfifoin(Dlink *L,void *bf);
@@ -147,7 +148,7 @@ int CompareAction(void *rec, char *name) {
 void *Dsearch(Dlink *L, char *val  ,int (*Compare)(void *,char *));
 /* You may Dfree link if link is no more needed */
 Dlink *Darraytolink(void **Array);
-/* you may free Array is its no more needed */
+/* you may free Array if its no more needed */
 void **Dlinktoarray(Dlink *L);
 
 

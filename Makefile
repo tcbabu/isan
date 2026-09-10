@@ -8,6 +8,7 @@
 # local fallbacks for missing operating system features
 SHELL	:= /bin/bash
 PREFIX=/usr
+export KULINA=$(PWD)
 export CFLAGS=-I$(PWD)/include
 export LDFLAGS=-L$(PWD)/lib
 X11_CFLAGS	="-I$(PWD)/include $(shell pkg-config --cflags x11)"

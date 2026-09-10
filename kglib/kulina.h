@@ -1022,6 +1022,7 @@ int kgGetTableCurpos ( void *Tmp );
 int kgGetTableStartChar ( void *Tmp );
 int kgScrollDownTable(void *Tmp,int row) ;
 int kgScrollUpTable(void *Tmp,int row) ;
+int kgPrintTableCell(void *Tbl,int cell);
 void * kgSetWidgetImage(void *Widget,void *img);
 void * kgGetWidgetImage(void *Widget);
 void kgSetTextItemEcho(void *Tmp,int item, int echo);
@@ -1033,6 +1034,7 @@ double  kgGetScrollLength(void *widget);
 int    kgWrite(void *Widget, char *str) ;
 int    kgPrintf(void *Tmp, int infob,char *str) ;
 int    kgSplash(void *Tmp,int item,char *msg);
+int    kgMessageSplash(void *Tmp,char *str);
 //char * kgGetBrowserString(void *Tmp,int menu);
 char   *kgGetSelectedString(void *Tmp);
 int    kgGetSelection(void *tmp);
@@ -1040,6 +1042,8 @@ int    kgSetSelection(void *tmp,int val);
 int    kgSetSwitch(void *Widget,int item, int val);
 int    kgGetSwitch(void *Widget,int item);
 void **kgSetList(void *Widget,void **list);
+
+char **kgAllocStrings(char **menu);
 void **kgGetList(void *Widget);
 int    kgAddThumbNail(void *Widget,void *th,int pos);
 int    kgDeleteThumbNail(void *Widget,int pos);
@@ -1105,6 +1109,7 @@ int kgPickImage( void *parent,int xo,int yo,void *pt);
 int kgSelectImage( void *parent,int xo,int yo,int ThSize,void *pt);
 int kgRedrawDialog(DIALOG *Dialog);
 int kgDrawDialog(DIALOG *D);
+int kgDrawDiaDialog(DIALOG *D);
 void *kgGetThumbNail(void *Wid,int item);
 char *kgGetThumbNailName(void *Wid,int item);
 void *kgGetThumbNailImage(void *Wid,int item);
@@ -1121,9 +1126,9 @@ char **kgGetAudioFiles(void *arg); // multiple Video files
 char **kgGetVideoFiles(void *arg); // multiple Image files
 char **kgGetFiles(void *arg); // multiple files
 char *kgGetMediaFile(void *arg); // single media files
-char *kgGetImageFile(void *arg); // single Audio files
+char *kgGetImageFile(void *arg); // single Image files
 char *kgGetAudioFile(void *arg); // single Video files
-char *kgGetVideoFile(void *arg); // single Image files
+char *kgGetVideoFile(void *arg); // single Audio files
 char *kgGetFile(void *arg); // single files
 //Over
 void kgFreeThumbNails(ThumbNail **tb);
@@ -1230,7 +1235,7 @@ void *kgRotateAboutImage(void *img,float angle,int xo,int yo); // Creates new ro
 void *kgThumbNailImage(void *img,unsigned long w,unsigned long h);
 void *kgShadeImage(void *img);
 void *kgReduceNoiseImage(void *img);
-void *kgBlurgmImage(void *img);
+void *kgBlurImage(void *img);
 void *kgEmbossImage(void *img);
 void *kgSharpenImage(void *img);
 void *kgSpreadImage(void *img);
@@ -1247,12 +1252,17 @@ void *kgAddTransparentImage ( void *png1 , void *png2 , int Xshft , int Yshft );
 int  kgGetImageSize(void *img,int *xsize,int *ysize);
 void *kgMaskImage(void *png,void *mask);
 void *kgCopyImage(void *img);
+void *  kgAppendImage(void *img1,void *img2);
 void *kgCreateImage(int xzise,int ysize);
 int kgSetImageColor(void *img,int r,int g,int b);
 int kgSetPixelAlpha(void *img,int col, int row,int alpha);
 void *kgCleanImage(void *img);
 void *kgFlipImage(void *img); // About X refledction overwrites img
 void *kgFlopImage(void *img); // About Y refledction overwrites img
+int   kgGetImageTopBottom ( void * img ,int *top,int *bottm ); // get blank info
+int   kgGetImageLeftRight( void * img ,int *left,int *right );
+  int   kgGetAlphaTopBottom ( void * img ,int *top,int *bottom );
+  int   kgGetAlphaLeftRight ( void * img ,int *left,int *right );
 int   kgImagetoC(char *flname);
 void *kgBorderedRectangle(int w, int h,int clr,float rfac);
 void *kgPressedRectangle(int width,int height,int fillclr,float rfac);
@@ -1268,6 +1278,10 @@ void * kgFilledStringToImage2(char *Str,void *image,int xsize,int ysize,int font
 void * kgFilledStringToImage3(char *Str,void *image,int xsize,int ysize,int font,int fillcolor,int highli,int color,int bodr,int justification,int width,float rfac,int state,float depthfac);
 void * kgBoxedStringToImage(char *Str,void *image,int xsize,int ysize,int font,int border,int highli,int color,int justification,int width,float rfac,int state);
 void * kgShadedStringToImage(char *Str,void *image,int xsize,int ysize,int font,int fillcolor,int highli,int color,int justification,int width,float rfac,int state,int type);
+void * kgShadedImage ( void *image , int xsize , \
+  int ysize , int fillcolor );
+  void * kgShadedTick ( int Size , int fillcolor );
+int kgDrawTick(void *G,float xo,float yo,int  size,int r,int g,int b);
 void *kgFMGtogmImage(void *tmp);
 void *kgGetBackground(void *Tmp,int x1,int y1,int x2,int y2);
 int kgRestoreImage(DIALOG *D,void *tmp,int x0,int y0,int width,int height);
@@ -1293,6 +1307,8 @@ void * kgGoback1Image(int size,int red,int green,int blue);
 void * kgGobackImage(int size,int red,int green,int blue);
 void * kgPowerdownImage(int size,int red,int green,int blue);
 void * kgHomeImage(int size,int red,int green,int blue);
+void * kgTickImage(int size,int red,int green,int blue);
+
 int    kgFmgToFile(unsigned char *array,int sz,char * flname);
 /* end  of built in images */
 /*
@@ -1332,6 +1348,7 @@ void kgGouraudFill(DIG *G,int n, float *x, float *y,float *v);
 void kgWriteText( DIG *G,char *c);
 void kgTextAngle(DIG *G,float ang);
 float  kgStringLength(void *G,char *title);
+float  ftStringLength(int font,char *title,float width);
 void kgTextSize(DIG *G,float h,float w,float g);
 void kgTextFont(DIG *G,int tf);
 void kgTextColor(DIG *G,int tcolr);
@@ -1436,6 +1453,10 @@ int kgFileBrowser(void *parent,int x0,int y0,  char *v0, char *v1 );
 int kgGetFont(void *parent,int xo,int yo);
 void * kgGetFreeTypeFont(void *parent,void *Font);
 int kgGetColor(void *parent,int xo,int yo,int *r,int *g,int *b);
+
+ int kgFileStat(char *flname);
+int kgMakeTmpFolderInHome(char *Tfolder);
+int kgMakeFileInFolder(char *Folder,char *Ext,char *Flname) ;
 /* 
   utilities 
 */
@@ -1447,6 +1468,7 @@ char *kgWhich(char *pgr);
 int kgAddFixedFont(char *);
 int kgCheckFont(char *);
 int kgAddFont(char *);
+int kgGetFontNumber(char * Font);
 char **kgGetMonoList();
 char **kgGetFontList();
 char *kgGetMonoFont(int);
@@ -1664,6 +1686,7 @@ char * DgetFlagArg(Dlink *Alist,char **argv,char *flag,int nv); //Alist from Dge
 char **  DprocessFlags(char *argv[],DARGS fargpt[]);
 Dlink *Dreadfile(char *flname);
 int Dwritefile(Dlink *L,char *flname);
+int Dappendfile(Dlink *L,char *flname);
 int Dpush(Dlink *L,void *bf);
 void * Dpop(Dlink *L);
 int Dfifoin(Dlink *L,void *bf);
@@ -1821,7 +1844,48 @@ static void *Malloc(int size) {
    }
    return pt;
 }
+#ifndef D_DiaIntr
+#define D_DiaIntr
+// NEW code for new interface
+typedef struct diaintr__ {
+  int GrpId; // set int MakeGroup 
+  int xsh;
+  int ysh;
+  void * (*RunDia)(void *D,void *arg);// used for independent existance
+  int (*MakeGroup)(DIALOG *D,void *arg);// for as a group in existing
+  int (*Settings )(void * D, void *arg);// to setup when using as a group
+  char *Title; // menu title
+  char *Help; // help message
+  void * (*Action)(void *G,void *arg);
+  void *args;  // setting parameters
+  void *rets;  // return values, may be used as Action arg
+  void *(*Cleanup) (void *);
+  int  (*SwitchOn) (void *);
+  int  (*SwitchOff)(void *);
+  void *Dtmp; // pointer parent Dialog, Set in Make group
+} DIAINTR;
+typedef struct diaret_ {
+  int selection;
+  void *retvals;
+} DIARET;
+typedef void *(*MODINTERFACE)();
+typedef int (*MAKEGROUP)(void *,void *);
 #endif
+void *kgGetArgs(void  *); // returns args of DIAINTR after searching title
+void *kgGetRets(void  *); // returns rets of DIAINTR after searching title
+void *kgTakeAction(void *T ,void *Uargs); // executes the action of the DIAINTR
+int kgCheckTitle (void *,char *str); // compares title
+void *kgGetModuleList(void *ModFuns) ;// returns Dlink * of Dts
+void *kgLoadModule(char *);
+void *kgDrawingBoxInterface(void *,void *);
+void *kgGetModule(void *Dia,void *ModFun, void *args, int xsh,int ysh);//returns Dt
+void *kgGetDrawingBox(void *Dia, void *args, int xsh,int ysh);//returns Dt
+int  kgModuleOn(void *Dt);
+int  kgModuleOff(void *Dt);
+int kgDrawingBoxOff(void *Dt);
+int kgDrawingBoxOn(void *Dt);
+#endif
+int kgCheckParentPosition(void *Dtmp);
 #ifdef __cplusplus
 }
 #endif

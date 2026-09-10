@@ -27,6 +27,7 @@
 #define LN_WIDTH 20
 #define far 
 #include <malloc.h>
+#include <dlfcn.h>
 #define RESIZE 5
 //#include "images.c"
   extern int TextSize , Ht , Wd , Gap , Bt; // It is Okay For Thread;
@@ -1315,6 +1316,180 @@
       D->TotWid = i;
       return controls;
   }
+  int kgDrawDiaDialog ( DIALOG *D ) {
+      int n , i , controls = 0 , item , ch , oldi = -1;
+      DIA *d;
+      d = D->d;
+      D->df = 0;
+      if ( D->DrawBkgr == 1 ) _ui_Draw_Dialog_Area_Transparent ( D ) ;
+      if ( D->Bkpixmap != NULL ) kgImage ( ( D ) , D->Bkpixmap , 0 , 0 , D->xl , D->yl , D->transparency , 1.0 ) ;
+          
+      i = 0;
+      while ( d [ i ] .t != NULL ) {
+          ch = ( d [ i ] .t->code ) ;
+          printf("switch= %c\n",ch);
+          fflush(stdout);
+          switch ( ( int ) ch ) {
+              case 'o': /* progress bar */
+              _uiDrawO ( D , i ) ;
+              break;
+              case 'p': /* new for xpm display */
+//         _uiDrawTransparentPicture(D,i);
+              _uiDrawP ( D , i ) ;
+              break;
+              case 'i': /* info box */
+//         _uiDrawInfo(D,i);
+              _uiDrawI ( D , i ) ;
+              break;
+              case 'x': // new type browser
+              _uiDrawX ( D , i ) ;
+              if ( kgGetWidgetVisibility ( kgGetWidget ( D , i ) ) != 0 ) {
+                  controls++;
+                  D->df = i;
+              }
+              break;
+              case 'v': // Vert scroll bar
+              _uiDrawV ( D , i ) ;
+              if ( kgGetWidgetVisibility ( kgGetWidget ( D , i ) ) != 0 ) {
+                  controls++;
+                  D->df = i;
+              }
+              break;
+              case 'z': // Vert scroll bar
+              _uiDrawZ ( D , i ) ;
+              if ( kgGetWidgetVisibility ( kgGetWidget ( D , i ) ) != 0 ) {
+                  controls++;
+                  D->df = i;
+              }
+              break;
+              case 'y': // new type browser
+              _uiDrawY ( D , i ) ;
+              if ( kgGetWidgetVisibility ( kgGetWidget ( D , i ) ) != 0 ) {
+                  controls++;
+                  D->df = i;
+              }
+              break;
+              case 'r': // new type browser
+              _uiDrawRadioButton ( D , i ) ;
+              if ( kgGetWidgetVisibility ( kgGetWidget ( D , i ) ) != 0 ) {
+                  controls++;
+                  D->df = i;
+              }
+              break;
+              case 'c': // new type browser
+              _uiDrawCheckBox ( D , i ) ;
+              if ( kgGetWidgetVisibility ( kgGetWidget ( D , i ) ) != 0 ) {
+                  controls++;
+                  D->df = i;
+              }
+              break;
+              case 't':
+#if 1
+              _uiDrawTextBox ( D , i ) ;
+#endif
+              if ( kgGetWidgetVisibility ( kgGetWidget ( D , i ) ) != 0 ) {
+                  controls++;
+                  D->df = i;
+                  if ( D->InputWid < 0 ) D->InputWid = i;
+              }
+              break;
+              case 'T':
+              _uiDrawTableBox ( D , i ) ;
+              if ( kgGetWidgetVisibility ( kgGetWidget ( D , i ) ) != 0 ) {
+                  controls++;
+                  D->df = i;
+                  if ( D->InputWid < 0 ) D->InputWid = i;
+              }
+              break;
+              case 'h':
+              _uiDrawN ( D , i ) ;
+              if ( kgGetWidgetVisibility ( kgGetWidget ( D , i ) ) != 0 ) {
+                  controls++;
+                  D->df = i;
+              }
+              break;
+              case 'H':
+              _uiDrawHoriButtons ( D , i ) ;
+              if ( kgGetWidgetVisibility ( kgGetWidget ( D , i ) ) != 0 ) {
+                  controls++;
+                  D->df = i;
+              }
+              break;
+              case 'n':
+              _uiDrawN ( D , i ) ;
+              if ( kgGetWidgetVisibility ( kgGetWidget ( D , i ) ) != 0 ) {
+                  controls++;
+                  D->df = i;
+              }
+              break;
+              case 'b':
+              case 'N':
+              _uiDrawB ( D , i ) ;
+              if ( kgGetWidgetVisibility ( kgGetWidget ( D , i ) ) != 0 ) {
+                  controls++;
+                  D->df = i;
+              }
+              break;
+              case 'f':
+              _uiDrawSlideFloat ( D , i ) ;
+              if ( kgGetWidgetVisibility ( kgGetWidget ( D , i ) ) != 0 ) {
+                  controls++;
+                  D->df = i;
+              }
+              break;
+              case 'P':
+              _uiDrawHbar ( D , i ) ;
+              if ( kgGetWidgetVisibility ( kgGetWidget ( D , i ) ) != 0 ) {
+                  controls++;
+                  D->df = i;
+              }
+              break;
+              case 'd':
+              _uiDrawSlideInteger ( D , i ) ;
+              if ( kgGetWidgetVisibility ( kgGetWidget ( D , i ) ) != 0 ) {
+                  controls++;
+                  D->df = i;
+              }
+              break;
+              case 'w':
+              _uiDrawBrowser ( D , i ) ;
+              if ( kgGetWidgetVisibility ( kgGetWidget ( D , i ) ) != 0 ) {
+                  controls++;
+                  D->df = i;
+              }
+              break;
+              case 'e':
+              _uiDrawE ( D , i ) ;
+              if ( kgGetWidgetVisibility ( kgGetWidget ( D , i ) ) != 0 ) {
+                  controls++;
+                  D->df = i;
+              }
+              break;
+              case 's':
+              _uiDrawScrollMsgItem ( D , i ) ;
+              if ( kgGetWidgetVisibility ( kgGetWidget ( D , i ) ) != 0 ) {
+                  controls++;
+                  D->df = i;
+              }
+              break;
+              case 'g':
+              _uiDrawGraphicsArea ( D , i ) ;
+              break;
+              case 'm':
+              case 'M':
+              case 'B':
+              _uiDrawMessage ( D , i ) ;
+              break;
+              default:
+              printf ( "Error: in dialog : wrong code |%c| \n" , ch ) ;
+              exit ( 0 ) ;
+          }
+          i++;
+      }
+      D->controls = controls;
+      D->TotWid = i;
+      return controls;
+  }
   int kgGetWidgetId ( DIALOG *D , void *Widget ) {
       int i , k , ret = -1;
       DIA *d;
@@ -2161,7 +2336,7 @@
                       kgDC *dc;
                       dc = ( kgDC * ) ( g->dc ) ;
 //            Dfree(dc->Fontlist);
-                      Dempty ( dc->Fontlist ) ;
+//                      Dempty ( dc->Fontlist ) ;
                       Free ( g->dc ) ;
                   }
                   if ( g->wc != NULL ) Free ( g->wc ) ;
@@ -2855,7 +3030,7 @@
               {
                   DIX *w;
                   w = d [ i ] .x;
-                  if ( ( D->VerId == 1401010200 ) || ( D->VerId == 2107030000 ) ) {
+                  if ( ( D->VerId == 1401010200 ) || ( D->VerId >= 2107030000 ) ) {
                       kgFreeDouble ( ( void ** ) ( w->pt ) ) ;
                       w->pt = NULL;
                   }
@@ -2867,7 +3042,7 @@
               {
                   DIY *w;
                   w = d [ i ] .y;
-                  if ( ( D->VerId == 1401010200 ) || ( D->VerId == 2107030000 ) ) {
+                  if ( ( D->VerId == 1401010200 ) || ( D->VerId >= 2107030000 ) ) {
                       kgFreeDouble ( ( void ** ) ( w->pt ) ) ;
                       w->pt = NULL;
                   }
@@ -4930,6 +5105,13 @@
           kgFreeDouble ( ( void ** ) ( D->d ) ) ;
           D->d = NULL;
           break;
+          case 2609040000:
+          if ( D->Cleanupfun != NULL ) D->Cleanupfun ( D ) ;
+          uiFreeWidgetMem ( D ) ;
+          Free ( ( D->Kbrd ) ) ;
+          kgFreeDouble ( ( void ** ) ( D->d ) ) ;
+          D->d = NULL;
+          break;
           default :
 #if 0
           if ( D->Cleanupfun != NULL ) D->Cleanupfun ( D ) ;
@@ -5816,6 +5998,45 @@
       pthread_mutex_unlock ( & _Tmplock ) ;
       return pt;
   }
+ int kgFileStat(char *flname) {
+  int ret;
+  struct stat buff;
+  ret = stat(flname,&buff);
+  if(ret < 0) return 0;
+  if ( S_ISDIR ( buff.st_mode ) ) return 2;
+  else return 1;
+}
+int kgMakeTmpFolderInHome(char *Tfolder) {
+  int Fstat = 0;
+  int id=1;
+  sprintf(Tfolder,"%-s/%-d_%-3.3d",getenv("HOME"),getpid(),id);
+  while(kgFileStat(Tfolder)) {
+    id++;
+    sprintf(Tfolder,"%-s/%-d_%-3.3d",getenv("HOME"),getpid(),id);
+  }
+   mkdir(Tfolder,0700);
+//    printf("Created: %s\n",Tfolder);
+    Fstat=1;
+  return Fstat;
+}
+int kgMakeFileInFolder(char *Folder,char *Ext,char *Flname) {
+    int id=1;
+    if(Ext != NULL) {
+    sprintf(Flname,"%-s/%-d_%-4.4d.%-s",Folder,getpid(),id,Ext);
+    while(kgFileStat(Flname)) {
+      id++;
+      sprintf(Flname,"%-s/%-d_%-4.4d.%-s",Folder,getpid(),id,Ext);
+    }
+    }
+    else {
+      sprintf(Flname,"%-s/%-d_%-4.4d",Folder,getpid(),id);
+      while(kgFileStat(Flname)) {
+        id++;
+        sprintf(Flname,"%-s/%-d_%-4.4d",Folder,getpid(),id);
+      }
+    }
+    return 1;
+  }
   char * ui_mktmpdir ( void ) {
       static int pid = 0;
       static char dir [ 200 ] ;
@@ -5827,11 +6048,15 @@
       pid = getpid ( ) ;
       sprintf ( dir , "/tmp/%-d" , pid ) ;
       sprintf ( dirname , "%-s_%-d" , dir , entry ) ;
+#if 0
       dp = opendir ( dirname ) ;
       if ( dp == NULL ) {
           mkdir ( dirname , 0700 ) ;
       }
       else closedir ( dp ) ;
+#else
+      if(kgFileStat(dirname)==0 ) mkdir(dirname,0700);
+#endif
       pt = ( char * ) Malloc ( strlen ( dirname ) +1 ) ;
       strcpy ( pt , dirname ) ;
       entry++;
@@ -6518,6 +6743,24 @@
           break;
       }
       return 1;
+  }
+  char **kgAllocStrings(char **menu) {
+     char **spt=NULL,*tpt;
+     int i,count,ln;
+     if (menu == NULL ) return NULL;
+     i=0;
+     while(menu[i] != NULL) i++;
+     count = i+1;
+     spt = (char **)malloc(sizeof(char *)*count);
+     spt[i]=NULL;
+     i=0;
+     while(menu[i] != NULL){
+       tpt = (char *)malloc(strlen(menu[i])+1);
+       strcpy(tpt,menu[i]);
+       spt[i]=tpt;
+       i++;
+     }
+     return spt;     
   }
   int kgGetSelection ( void *tmp ) {
       DIA *D;DIX *X;DIW *W;DIE *E;
@@ -10143,3 +10386,133 @@
       kgUpdateWidget(V);
       return 1;
   }
+  void *kgGetArgs(void *Tmp) {
+     DIAINTR  *T=(DIAINTR  *)Tmp;
+     if(Tmp == NULL ) return NULL;
+     return T->args;;
+  }
+  void *kgGetRets(void *Tmp) {
+     DIAINTR  *T=(DIAINTR  *)Tmp;
+     if(Tmp == NULL ) return NULL;
+     return T->rets;
+  }
+  void *kgTakeAction(void *Tmp,void *arg) {
+     DIAINTR  *T=(DIAINTR  *)Tmp;
+     if(Tmp == NULL ) return NULL;
+     return T->Action(arg,T->rets);
+  }
+  int kgCheckTitle(void *Tmp,char *str) {
+      DIAINTR  *T = (DIAINTR  *)Tmp;
+      if(Tmp == NULL) return 0;
+      if(str == NULL) return 0;
+      if (strcmp(T->Title,str)== 0) return 1;
+      return 0;      
+  }      
+
+ void *kgGetModuleList(void *Mtmp) {
+   int count,i=0;
+   Dlink *ToolList=Dopen();
+   DIAINTR  *DI=NULL;
+   MODINTERFACE *ModFuns=(MODINTERFACE *)Mtmp;
+   i=0;
+   while(ModFuns[i] != NULL )i++;
+
+   count = i;
+   for(i=0;i<count;i++) {
+       MODINTERFACE fun = (MODINTERFACE )(ModFuns[i]); 
+       DI = (DIAINTR  *)fun(NULL,NULL);
+       if(DI==NULL) printf("DI is NULL!!!\n");
+//       printf("Title: %s\n",DI->Title);
+       Dadd(ToolList,DI);
+   }
+   return ToolList;
+}
+void *kgLoadModule(char *Name) {
+   MODINTERFACE fun;
+   char solib[200];
+   char interface[200];
+   void *handle;
+   char *error;
+   sprintf(interface,"%-sInterface",Name);
+   sprintf(solib,"%-s/lib%-s.so",getenv("PWD"),Name);
+   handle = dlopen(solib,RTLD_LAZY);
+   if(!handle) {
+     sprintf(solib,"/usr/share/kulina/lib/lib%-s.so",Name);
+     handle = dlopen(solib,RTLD_LAZY);
+     if(!handle) {
+       sprintf(solib,"/usr/lib/lib%-s.so",Name);
+       handle = dlopen(solib,RTLD_LAZY);
+       if(!handle) {
+          fprintf(stderr,"%s\n",dlerror());
+          return NULL;
+       }
+     }
+  }
+  fun = (MODINTERFACE )dlsym(handle,interface);
+  return (void *)fun;
+}
+
+void *kgGetModulde(void *Tmp,void *Ftmp,void *args,int xsh,int ysh) {
+     MODINTERFACE Fun =(MODINTERFACE) Ftmp;
+     DIAINTR *Dt=NULL;
+     if( (Tmp != NULL) && (Ftmp!= NULL) ) {
+         Dt = (DIAINTR *)Fun(args,NULL);
+         Dt->GrpId = ((int (*)(DIALOG *,void *))(Dt->MakeGroup))(Tmp,NULL);
+         Dt->Dtmp = Tmp;
+         Dt->xsh = xsh;
+         Dt->ysh = ysh;         
+         kgShiftGrp(Tmp,Dt->GrpId,xsh,ysh);
+     }
+     return Dt;
+}
+int kgModuleOn(void *Mtmp) {
+    DIAINTR *Dt = (DIAINTR *)Mtmp;
+    if(Mtmp== NULL) return 0;
+    if( Dt->Dtmp== NULL) return 0;
+    kgSetGrpVisibility(Dt->Dtmp,Dt->GrpId,1);
+    kgUpdateOn(Dt->Dtmp);
+    return 1;
+}
+int kgModuleOff(void *Mtmp) {
+    DIAINTR *Dt = (DIAINTR *)Mtmp;
+    if(Mtmp== NULL) return 0;
+    if( Dt->Dtmp== NULL) return 0;
+    kgSetGrpVisibility(Dt->Dtmp,Dt->GrpId,0);
+    kgUpdateOn(Dt->Dtmp);
+    return 1;
+}
+int kgCheckParentPosition(void *Dtmp) {
+    DIALOG *D=(DIALOG *)Dtmp;
+    DIALOG *P=NULL;
+    int xo,yo,xl,yl;
+    if(Dtmp == NULL) return 0;
+    P = (DIALOG *)(D->parent);
+    if(P == NULL ) return 0;
+    if((P->xl <= D->xl ) || (P->yl <= D->yl)) {
+        xo = P->xl/2+P->xo;
+        yo = P->yl/2+P->yo;
+        xo = xo-D->xl/2;
+        yo = yo - D->yl/2;
+        if(xo< 0) xo=0;
+        if(yo< 0) yo =0;
+        D->xo = xo;
+        D->yo = yo;                       
+        D->parent = NULL;
+        return 0;
+    }
+    int OK=1;
+    while(OK) {
+      if( ((D->xo+D->xl) > P->xl)){
+        xo = (P->xl-D->xl)/2;
+        D->xo = xo;
+        continue;
+      }
+      if(  ((D->yo+D->yl) > P->yl)){
+        yo = (P->yl-D->yl);
+        D->yo = yo;
+        continue;
+      }
+      OK=0;
+    }
+    return 1;
+}
